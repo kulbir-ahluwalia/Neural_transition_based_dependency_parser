@@ -41,41 +41,11 @@ def sanityCheck(test_fxn, i=None, test_bundle=None, to_print = 'all', do_return=
     sentences, configs, gold_actions, gold_features, _ = test_bundle
     vocab = Vocabulary(sentences)
     testsents = vocab.buildSentences(sentences)
-
-    # # # for testing ==> comment later
-    # sent, gold_deps = testsents[1][0], testsents[1][1]
-    # print(f"gold_deps in the start are are: {gold_deps}")
-    #
-    # parser_config = ParserConfiguration(sent, vocab)
-    # parser_config.parse_step('LA-punct')
-
     sents_correct, printag = 0, None # printag will collect the first error you encounter (used in Gradescope)
-
-
     for i in range(len(sentences)):
 
         printsent = "" # printsent is full printout for this sentence (only needed when to_print != 'none')
         sent, gold_deps = testsents[i][0], testsents[i][1]
-        print(f"gold_deps are: {gold_deps}")
-        # self.arcs = []
-        # self.vocab = vocab
-        # self.dep_to_head_mapping = {}
-
-        # # comment later later later on
-        # gold_deps_arcs_output = gold_deps.arcs
-        # gold_deps_vocab_output = gold_deps.vocab
-        # gold_deps_dep_to_head_mapping_output = gold_deps.dep_to_head_mapping
-        #
-        # print(f"gold_deps_arcs_output: {gold_deps_arcs_output}")
-        # print(f"gold_deps_vocab_output: {gold_deps_vocab_output}")
-        # print(f"gold_deps_dep_to_head_mapping_output: {gold_deps_dep_to_head_mapping_output}")
-
-        # gold_deps are: <__main__.Dependencies object at 0x7fb7e6e0ff10>
-        # gold_deps_arcs_output: [<__main__.Arc object at 0x7fb7e6e0fc70>, <__main__.Arc object at 0x7fb7e9e9d760>, <__main__.Arc object at 0x7fb7e9e9dd30>, <__main__.Arc object at 0x7fb7e9e9de80>, <__main__.Arc object at 0x7fb7e9e9d910>, <__main__.Arc object at 0x7fb7e6dc3160>, <__main__.Arc object at 0x7fb7e6dc3be0>, <__main__.Arc object at 0x7fb7e6dc3220>, <__main__.Arc object at 0x7fb7e6dc3d00>]
-        # gold_deps_vocab_output: <__main__.Vocabulary object at 0x7fb7e6e0f5e0>
-        # gold_deps_dep_to_head_mapping_output: {1: <__main__.Arc object at 0x7fb7e6e0fc70>, 2: <__main__.Arc object at 0x7fb7e9e9d760>, 3: <__main__.Arc object at 0x7fb7e9e9dd30>, 4: <__main__.Arc object at 0x7fb7e9e9de80>, 5: <__main__.Arc object at 0x7fb7e9e9d910>, 6: <__main__.Arc object at 0x7fb7e6dc3160>, 7: <__main__.Arc object at 0x7fb7e6dc3be0>, 8: <__main__.Arc object at 0x7fb7e6dc3220>, 9: <__main__.Arc object at 0x7fb7e6dc3d00>}
-
-
         if to_test == 'get_gold_action':
             printsent += 'gold_dependencies: ' +str([str(arc) for arc in gold_deps.arcs]) + '\n\n'
 
@@ -88,16 +58,15 @@ def sanityCheck(test_fxn, i=None, test_bundle=None, to_print = 'all', do_return=
             parser_config.stack, parser_config.buffer, parser_config.dependencies = stack, buffer, dependencies
 
             if to_test == 'get_gold_action' or not (gold_actions[i][j] is None or gold_actions[i][j] == 'DONE'): # Don't need to test if Done or None when not testing get_gold_action
-                
+
                 # Call the student code
                 arg = stack.get_si(1) if to_test in {'get_lc', 'get_rc'} else (int(to_test[-1]) if to_test[-1] in {'1', '2'} else None)
                 if to_test == 'get_gold_action': fxn = lambda: test_fxn(stack, buffer, gold_deps)
                 elif to_test in {'get_top3_stack_features', 'get_top3_buffer_features'}: fxn = lambda: test_fxn(parser_config)
                 else: fxn = lambda: test_fxn(parser_config, arg)
                 tt = to_test[:-2] if to_test[-1] in {'1', '2'} else to_test
-                
-                exception=None
 
+                exception=None
                 try:
                     yours = fxn()
                 except Exception as e:
@@ -105,25 +74,25 @@ def sanityCheck(test_fxn, i=None, test_bundle=None, to_print = 'all', do_return=
                     exception=e
                 correct = gold_actions[i][j] if to_test == 'get_gold_action' else gold_features[i][j][to_test]
                 fxn_name = 'get_gold_action(stack, buffer, gold_dependencies)' if to_test == 'get_gold_action'else  tt + ('(parser_config, 1)' if to_test not in to_test in {'get_lc', 'get_rc'} else '(parser_config, ' + str(arg) + ')')
-                
-                if to_test in {'get_lc', 'get_rc'} and exception is None: 
-                    if type(yours) != list or (len(yours) > 0 and type(yours[0]) != Arc): 
+
+                if to_test in {'get_lc', 'get_rc'} and exception is None:
+                    if type(yours) != list or (len(yours) > 0 and type(yours[0]) != Arc):
                         yours = 'Your ' + to_test + '(...) did not return a list of Arcs' # note: exact quote used below, so if need to change, change in both places
                     else: yours = [str(arc) for arc in yours]
                 # if random.random() < 0.05: yours = [None, None, None, None, None, None] # simulate getting it wrong
                 is_correct = yours == correct
-                
+
                 # Make the printouts!
                 printsent += 'Step ' + str(j+1) + ' | stack: ' + str([str(word) if to_test != 'get_gold_action' else word.word for word in stack]) + '\tbuffer: ' + str([str(word) if to_test != 'get_gold_action' else word.word for word in buffer]) + (('\tdependencies: ' + str([str(arc) for arc in dependencies.arcs])) if to_test != 'get_gold_action' else "") + '\n'
                 printsent += '\tTesting '+ fxn_name +':\n'
                 printsent += '\t\tYour Result: ' + str(yours) + '\t\tCorrect Result: ' + str(correct) + ('\t\tCorrect!' if is_correct else "") + '\n'
                 if not is_correct:
                     printsent += '\t\tIncorrect! Halting parse of this sentence.\n\n'
-                    if printag is None: 
+                    if printag is None:
                         statement=yours if yours == 'Your ' + to_test + '(...) did not return a list of Arcs' else str(yours)[:20]+("... " if len(str(yours)) > 20 else "")
                         statement = "Your first error (on a hidden test sentence): You returned " + statement + "; expected " + str(correct) + "."
                         printag = statement if exception is None else (statement, exception)
-                    if to_print != 'none': 
+                    if to_print != 'none':
                         print("Testing Sentence " + str(i+1) + '...')
                         if display_sent: display_sentence(sentences[i])
                         print(printsent)
@@ -133,10 +102,10 @@ def sanityCheck(test_fxn, i=None, test_bundle=None, to_print = 'all', do_return=
                         raise exception
                     break
                 else: printsent += '\n'
-      
+
         else:
             sents_correct += 1
-            if to_print == 'all': 
+            if to_print == 'all':
                 print("Testing Sentence " + str(i+1) + '...')
                 if display_sent: display_sentence(sentences[i])
                 print(printsent)
@@ -180,7 +149,7 @@ def sanityCheck_generate_training_examples(test_fxn, feat_extract = None, test_b
         if is_correct: sents_correct += 1
         if do_raise and exception is not None:
             raise exception
-        
+
     score = sents_correct / len(sentences)
     print(sents_correct, '/', len(sentences), '=', str(score*100)+'%', 'of test cases passed!')
     if do_return:
@@ -213,34 +182,10 @@ def sanityCheckStackBuffer():
 
     sentence = [item1, item2, item3]
     sanity_buffer = Buffer(sentence)
-
-    # following methods exist in buffer class
-    # def __getitem__(self, idx):
-    #     return self.buffer[idx]
-    #
-    # def __len__(self):
-    #     return len(self.buffer)
-    #
-    # def __str__(self):
-    #     return str([str(x) for x in self.buffer])
-
-    # # comment later later later on
-    # sanity_buffer_get_bi_output = sanity_buffer.get_bi(1)
-    # sanity_buffer_get_item_output = sanity_buffer.__getitem__(1)
-    # sanity_buffer_get_len_output = sanity_buffer.__len__()
-    # sanity_buffer_get_str_output = sanity_buffer.__str__()
-    #
-    # print(f"sanity_buffer.get_bi(0): {sanity_buffer_get_bi_output}")
-    # print(f"sanity_buffer.__getitem__(1): {sanity_buffer_get_item_output}")
-    # print(f"sanity_buffer.__len__(): {sanity_buffer_get_len_output}")
-    # print(f"sanity_buffer.__str__(): {sanity_buffer_get_str_output}")
-
-
     p1 = False
     p2 = False
     p3 = False
     pop_item = sanity_buffer.pop()
-
     if (pop_item.idx == 0 and pop_item.word == 'she' and pop_item.pos == 'PRP'):
         p1 = True
     pop_item = sanity_buffer.pop()
@@ -789,15 +734,19 @@ class ParserConfiguration(object):
         #DONE: How to check the following?? ==> Gradescope has the test for parse step
         elif transition[0] == "L":
             label = transition[3:]
-            w_i = self.stack.get_si(2)
-            w_j = self.stack.get_si(1)
+            # w_i = self.stack.get_si(2)
+            # w_j = self.stack.get_si(1)
+
+            w_j = self.stack.pop()
+            w_i = self.stack.pop()
             head = w_j
             dependent = w_i
+            self.stack.push(w_j)
 
             #need to pop w_i
-            w_j_stack = self.stack.pop()
-            w_i_stack = self.stack.pop()
-            self.stack.push(w_j_stack)
+            # w_j_stack = self.stack.pop()
+            # w_i_stack = self.stack.pop()
+            # self.stack.push(w_j_stack)
 
             self.dependencies.add(head, dependent, label)
 
@@ -806,11 +755,11 @@ class ParserConfiguration(object):
         elif transition[0] == "R":
             label = transition[3:]
             w_i = self.stack.get_si(2)
-            w_j = self.stack.get_si(1)
+            w_j = self.stack.pop()
             head = w_i
             dependent = w_j
 
-            w_j_stack = self.stack.pop()
+            # w_j_stack = self.stack.pop()
 
             self.dependencies.add(head, dependent, label)
 
@@ -841,7 +790,7 @@ class ParserConfiguration(object):
 # 
 # <font color='green'><b>Hint:</b> To get the $i$th word on the stack or buffer, call `stack.get_si(i)` or `buffer.get_bi(i)`. To find the head of a word `w`, call `gold_dependencies.getArcToHead(w)`.</font>
 
-# In[26]:
+# In[22]:
 
 
 def get_gold_action(stack, buffer, gold_dependencies):
@@ -866,11 +815,13 @@ def get_gold_action(stack, buffer, gold_dependencies):
     #     return str([str(x) for x in self.stack])
 
     ### TODO ###
+    print(f"stack is :{str(stack)}")
+    print(f"buffer is :{str(buffer)}")
     s1 = stack.get_si(1)
     print(f"s1 is: {s1}")
 
     s2 = stack.get_si(2)
-    print(f"s2 is: {s2}")
+    print(f"s2 is: {s2}\n")
 
 
 
@@ -884,6 +835,7 @@ def get_gold_action(stack, buffer, gold_dependencies):
                 print(f"len of buffer {len(buffer)} > 0 and there is only root in the stack hence action = 'S'")
                 action = 'S'
                 return action
+
             # elif buffer.__len__() == 0:
             elif len(buffer) == 0:
                 # return 'DONE'
@@ -910,23 +862,30 @@ def get_gold_action(stack, buffer, gold_dependencies):
 
     elif gold_dependencies.getArcToHead(s1).head == s2:
         h_of_b_i = True
-        print(f"h_of_b_i  in right arc is : {h_of_b_i}")
+        h_of_b_i_list = []
+        # print(f"h_of_b_i  in right arc is : {h_of_b_i}")
 
-        for b_i in buffer:
-            print(f"b_i is: {b_i}")
-            print(f"head of b_i is: {gold_dependencies.getArcToHead(b_i).head}")
-            print(f"is head of b_i == s1? : {gold_dependencies.getArcToHead(b_i).head == s1}")
+        for index, b_i in enumerate(buffer):
+            # print(f"b_i is: {b_i}")
+            # print(f"head of b_i is: {gold_dependencies.getArcToHead(b_i).head}")
+            # print(f"is head of b_i == s1? : {gold_dependencies.getArcToHead(b_i).head == s1}")
             if gold_dependencies.getArcToHead(b_i).head == s1:
                 h_of_b_i = False
-                print(f"h_of_b_i ==s1 and hence flag is : {h_of_b_i}")
-                break
+                h_of_b_i_list.append(1)
+                # print(f"h_of_b_i ==s1 and hence flag is : {h_of_b_i}")
+            elif gold_dependencies.getArcToHead(b_i).head != s1:
+                h_of_b_i_list.append(0)
 
-        if gold_dependencies.getArcToHead(s1).head == s2 and h_of_b_i:
+        h_of_b_i_list_sum = sum(h_of_b_i_list)
+        print(f"h_of_b_i_list: {h_of_b_i_list}")
+        print(f"h_of_b_i_list sum is: {h_of_b_i_list_sum}")
+
+        if gold_dependencies.getArcToHead(s1).head == s2 and (h_of_b_i_list_sum==0):
             arc_to_head = gold_dependencies.getArcToHead(s1)
-            print(f"arc_to_head in right arc: {arc_to_head}")
+            # print(f"arc_to_head in right arc: {arc_to_head}")
 
             arc_to_head_label = arc_to_head.label
-            print(f"arc_to_head label  in right arc: {arc_to_head.label}")
+            # print(f"arc_to_head label  in right arc: {arc_to_head.label}")
 
             # sanity_buffer.get_bi(0): Word(idx=0, word='she', pos='PRP', word_id=None, pos_id=None)
             # sanity_buffer.__getitem__(1): Word(idx=1, word='is', pos='VBP', word_id=None, pos_id=None)
@@ -940,7 +899,7 @@ def get_gold_action(stack, buffer, gold_dependencies):
     #  - If the buffer is empty, return `None`, indicating a failed parse (i.e., the sentence is non-projective).
 
     # elif buffer.__len__() != 0:
-    elif len(buffer) > 0:
+    elif len(buffer) != 0:
         # return 'S'
         print(f"len of buffer is greater than zero :{len(buffer)} and hence action = 'S'")
         action = 'S'
@@ -972,13 +931,13 @@ def get_gold_action(stack, buffer, gold_dependencies):
 # 
 # Note that Gradescope uses a set of different (hidden) tests, so you will want to fully test your code here.
 
-# In[26]:
+# In[22]:
 
 
 
 
 
-# In[27]:
+# In[23]:
 
 
 if __name__ == '__main__':
@@ -995,7 +954,7 @@ if __name__ == '__main__':
 # 
 # This function is worth <b>8 points</b>.
 
-# In[28]:
+# In[16]:
 
 
 def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract = lambda parser_config: []):
@@ -1026,7 +985,7 @@ def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract 
 
 # We provide you with a sanity check for this function on the same test sentences we used above.
 
-# In[29]:
+# In[17]:
 
 
 if __name__ == '__main__':
