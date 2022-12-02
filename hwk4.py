@@ -771,7 +771,7 @@ class ParserConfiguration(object):
         # print(f"transition is: {transition}")
         ### TODO ###
         # print(f"self.stack before pop is: {self.stack}")
-        popped_item = self.stack.pop()
+        # popped_item = self.stack.pop()
         # print(f"popped_item is: {popped_item}")
         # print(f"self.stack after pop is: {self.stack}")
 
@@ -779,7 +779,7 @@ class ParserConfiguration(object):
         # dependent is: Word(idx=2, word='news', pos='NN', word_id=55, pos_id=23)
         # label is: nsubj
 
-        label = transition[3:]
+
 
 
         if transition[0] == "S":
@@ -788,6 +788,7 @@ class ParserConfiguration(object):
 
         #TODO: How to check the following??
         elif transition[0] == "L":
+            label = transition[3:]
             w_i = self.stack.get_si(2)
             w_j = self.stack.get_si(1)
             head = w_j
@@ -803,6 +804,7 @@ class ParserConfiguration(object):
 
 
         elif transition[0] == "R":
+            label = transition[3:]
             w_i = self.stack.get_si(2)
             w_j = self.stack.get_si(1)
             head = w_i
@@ -888,11 +890,11 @@ def get_gold_action(stack, buffer, gold_dependencies):
             if buffer.__len__() > 0:
                 # return 'S'
                 action = 'S'
-                return action
+                # return action
             elif buffer.__len__() == 0:
                 # return 'DONE'
                 action = 'DONE'
-                return action
+                # return action
 
     elif gold_dependencies.getArcToHead(s2).head == s1:
         arc_to_head = gold_dependencies.getArcToHead(s2)
@@ -906,7 +908,7 @@ def get_gold_action(stack, buffer, gold_dependencies):
 
         # return 'LA-' + arc_to_head_label
         action = 'LA-' + arc_to_head_label
-        return action
+        # return action
 
     # If $h(s_1)=s_2$ <b>and</b> $h(b_i) \neq s_1$ for all words $b_i$ in the buffer, return `RA-label`. Here, `label` is the label of the arc that attaches $s_1$ to $s_2$.
     #  - This condition means that you cannot attach $s_1$ until everything in the buffer that depends on $s_1$ is attached. You should think about why this condition is necessary!
@@ -923,7 +925,7 @@ def get_gold_action(stack, buffer, gold_dependencies):
 
         # return 'RA-' + arc_to_head_label
         action = 'RA-' + arc_to_head_label
-        return action
+        # return action
 
     # 4. Otherwise:
     #  - If the buffer is not empty, return `S`.
@@ -932,15 +934,15 @@ def get_gold_action(stack, buffer, gold_dependencies):
     elif buffer.__len__() != 0:
         # return 'S'
         action = 'S'
-        return action
+        # return action
 
     elif buffer.__len__() == 0:
         # return 'None'
         action = 'None'
-        return action
+        # return action
 
     
-    # return action
+    return action
 
 
 # We provide you with 10 sentences for a sanity check of this function. The first sentence is the example from the lecture slides, the next 8 sentences are artificial sentences designed to test edge cases, and the last sentence is an example from the training set. For each sentence, we have hard-coded the stack & buffer configurations that you should encounter as well as the correct action.
