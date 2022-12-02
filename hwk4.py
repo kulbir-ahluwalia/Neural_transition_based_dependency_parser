@@ -596,7 +596,7 @@ class Stack(object):
         Push item onto (the end of) self.stack. Returns nothing.
         '''
 
-        ### TODO ###
+
         self.stack.append(item)
 
 
@@ -621,7 +621,7 @@ class Stack(object):
         '''
         assert len(self.stack) > 0
 
-        ### TODO ###
+
         # print(f"self.stack before pop is: {self.stack}")
         popped_item = self.stack.pop()
         # print(f"popped_item is: {popped_item}")
@@ -668,7 +668,7 @@ class Buffer(object):
         # print(f"self.buffer after pop is: {self.buffer}")
 
 
-        ### TODO ###
+
 
         
         # return None
@@ -769,7 +769,7 @@ class ParserConfiguration(object):
         assert transition in self.vocab.tran2id
 
         # print(f"transition is: {transition}")
-        ### TODO ###
+        ### DONE ###
         # print(f"self.stack before pop is: {self.stack}")
         # popped_item = self.stack.pop()
         # print(f"popped_item is: {popped_item}")
@@ -786,7 +786,7 @@ class ParserConfiguration(object):
             buffer_pop_output = self.buffer.pop()
             self.stack.push(buffer_pop_output)
 
-        #TODO: How to check the following??
+        #DONE: How to check the following?? ==> Gradescope has the test for parse step
         elif transition[0] == "L":
             label = transition[3:]
             w_i = self.stack.get_si(2)
@@ -799,8 +799,8 @@ class ParserConfiguration(object):
             w_i_stack = self.stack.pop()
             self.stack.push(w_j_stack)
 
-            self.dependencies.append(Arc(head, dependent, label, self.dependencies.vocab.tok2id[self.vocab.LABEL_PREFIX+label]))
-            self.dependencies.dep_to_head_mapping[dependent.idx] = self.dependencies.arcs[-1]
+            self.dependencies.add(head, dependent, label)
+
 
 
         elif transition[0] == "R":
@@ -812,9 +812,7 @@ class ParserConfiguration(object):
 
             w_j_stack = self.stack.pop()
 
-
-            self.dependencies.append(Arc(head, dependent, label, self.dependencies.vocab.tok2id[self.vocab.LABEL_PREFIX+label]))
-            self.dependencies.dep_to_head_mapping[dependent.idx] = self.dependencies.arcs[-1]
+            self.dependencies.add(head, dependent, label)
 
         pass
 
@@ -843,7 +841,7 @@ class ParserConfiguration(object):
 # 
 # <font color='green'><b>Hint:</b> To get the $i$th word on the stack or buffer, call `stack.get_si(i)` or `buffer.get_bi(i)`. To find the head of a word `w`, call `gold_dependencies.getArcToHead(w)`.</font>
 
-# In[14]:
+# In[26]:
 
 
 def get_gold_action(stack, buffer, gold_dependencies):
@@ -874,72 +872,90 @@ def get_gold_action(stack, buffer, gold_dependencies):
     s2 = stack.get_si(2)
     print(f"s2 is: {s2}")
 
-    h_of_b_i = False
-    print(f"h_of_b_i is : {h_of_b_i}")
-
-    for b_i in buffer:
-        if gold_dependencies.getArcToHead(b_i).head == s1:
-            h_of_b_i = True
-            print(f"h_of_b_i ==s1 and hence flag is : {h_of_b_i}")
-            break
 
 
 
-    if stack.__len__() == 1:     #TODO: len()
+
+    if len(stack) == 1:     #TODO: len()
         if stack.__getitem__(0).word == '<ROOT>':  #TODO
-            if buffer.__len__() > 0:
+            # if buffer.__len__() > 0:
+            if len(buffer) > 0:
                 # return 'S'
+                print(f"len of buffer {len(buffer)} > 0 and there is only root in the stack hence action = 'S'")
                 action = 'S'
-                # return action
-            elif buffer.__len__() == 0:
+                return action
+            # elif buffer.__len__() == 0:
+            elif len(buffer) == 0:
                 # return 'DONE'
+                print(f"len of buffer {len(buffer)} == 0 and there is only root in the stack hence action = 'DONE'")
                 action = 'DONE'
-                # return action
+                return action
 
     elif gold_dependencies.getArcToHead(s2).head == s1:
         arc_to_head = gold_dependencies.getArcToHead(s2)
-        print(f"arc_to_head: {arc_to_head}")
+        print(f"arc_to_head in left action: {arc_to_head}")
 
         arc_to_head_label = arc_to_head.label
-        print(f"arc_to_head label: {arc_to_head.label}")
+        print(f"arc_to_head label in left action: {arc_to_head.label}")
 
         # sanity_buffer.get_bi(0): Word(idx=0, word='she', pos='PRP', word_id=None, pos_id=None)
         # sanity_buffer.__getitem__(1): Word(idx=1, word='is', pos='VBP', word_id=None, pos_id=None)
 
         # return 'LA-' + arc_to_head_label
         action = 'LA-' + arc_to_head_label
-        # return action
+        return action
 
     # If $h(s_1)=s_2$ <b>and</b> $h(b_i) \neq s_1$ for all words $b_i$ in the buffer, return `RA-label`. Here, `label` is the label of the arc that attaches $s_1$ to $s_2$.
     #  - This condition means that you cannot attach $s_1$ until everything in the buffer that depends on $s_1$ is attached. You should think about why this condition is necessary!
 
-    elif gold_dependencies.getArcToHead(s1).head == s2 and h_of_b_i:
-        arc_to_head = gold_dependencies.getArcToHead(s1)
-        print(f"arc_to_head: {arc_to_head}")
+    elif gold_dependencies.getArcToHead(s1).head == s2:
+        h_of_b_i = True
+        print(f"h_of_b_i  in right arc is : {h_of_b_i}")
 
-        arc_to_head_label = arc_to_head.label
-        print(f"arc_to_head label: {arc_to_head.label}")
+        for b_i in buffer:
+            print(f"b_i is: {b_i}")
+            print(f"head of b_i is: {gold_dependencies.getArcToHead(b_i).head}")
+            print(f"is head of b_i == s1? : {gold_dependencies.getArcToHead(b_i).head == s1}")
+            if gold_dependencies.getArcToHead(b_i).head == s1:
+                h_of_b_i = False
+                print(f"h_of_b_i ==s1 and hence flag is : {h_of_b_i}")
+                break
 
-        # sanity_buffer.get_bi(0): Word(idx=0, word='she', pos='PRP', word_id=None, pos_id=None)
-        # sanity_buffer.__getitem__(1): Word(idx=1, word='is', pos='VBP', word_id=None, pos_id=None)
+        if gold_dependencies.getArcToHead(s1).head == s2 and h_of_b_i:
+            arc_to_head = gold_dependencies.getArcToHead(s1)
+            print(f"arc_to_head in right arc: {arc_to_head}")
 
-        # return 'RA-' + arc_to_head_label
-        action = 'RA-' + arc_to_head_label
-        # return action
+            arc_to_head_label = arc_to_head.label
+            print(f"arc_to_head label  in right arc: {arc_to_head.label}")
+
+            # sanity_buffer.get_bi(0): Word(idx=0, word='she', pos='PRP', word_id=None, pos_id=None)
+            # sanity_buffer.__getitem__(1): Word(idx=1, word='is', pos='VBP', word_id=None, pos_id=None)
+
+            # return 'RA-' + arc_to_head_label
+            action = 'RA-' + arc_to_head_label
+            return action
 
     # 4. Otherwise:
     #  - If the buffer is not empty, return `S`.
     #  - If the buffer is empty, return `None`, indicating a failed parse (i.e., the sentence is non-projective).
 
-    elif buffer.__len__() != 0:
+    # elif buffer.__len__() != 0:
+    elif len(buffer) > 0:
         # return 'S'
+        print(f"len of buffer is greater than zero :{len(buffer)} and hence action = 'S'")
         action = 'S'
-        # return action
+        return action
 
-    elif buffer.__len__() == 0:
+    # elif buffer.__len__() == 0:
+    elif len(buffer) == 0:
         # return 'None'
-        action = 'None'
-        # return action
+        print(f"len of buffer is zero :{len(buffer)} and hence action = None")
+        action = None
+        # action = 'S'
+        return action
+
+    else:
+        print(f"DID NOT go in any if condition")
 
     
     return action
@@ -956,17 +972,18 @@ def get_gold_action(stack, buffer, gold_dependencies):
 # 
 # Note that Gradescope uses a set of different (hidden) tests, so you will want to fully test your code here.
 
-# In[14]:
+# In[26]:
 
 
 
 
 
-# In[15]:
+# In[27]:
 
 
 if __name__ == '__main__':
-    sanityCheck(get_gold_action, to_print='incorrect', do_raise=True)
+    # sanityCheck(get_gold_action, to_print='incorrect', do_raise=True)
+    sanityCheck(get_gold_action, to_print='all', do_raise=True)
 
 
 # ## <font color='red'>TODO</font>: Generate Training Examples [8 points]
@@ -978,7 +995,7 @@ if __name__ == '__main__':
 # 
 # This function is worth <b>8 points</b>.
 
-# In[16]:
+# In[28]:
 
 
 def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract = lambda parser_config: []):
@@ -1009,7 +1026,7 @@ def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract 
 
 # We provide you with a sanity check for this function on the same test sentences we used above.
 
-# In[17]:
+# In[29]:
 
 
 if __name__ == '__main__':
