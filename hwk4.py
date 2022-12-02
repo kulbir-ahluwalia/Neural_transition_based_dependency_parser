@@ -41,11 +41,41 @@ def sanityCheck(test_fxn, i=None, test_bundle=None, to_print = 'all', do_return=
     sentences, configs, gold_actions, gold_features, _ = test_bundle
     vocab = Vocabulary(sentences)
     testsents = vocab.buildSentences(sentences)
+
+    # # # for testing ==> comment later
+    # sent, gold_deps = testsents[1][0], testsents[1][1]
+    # print(f"gold_deps in the start are are: {gold_deps}")
+    #
+    # parser_config = ParserConfiguration(sent, vocab)
+    # parser_config.parse_step('LA-punct')
+
     sents_correct, printag = 0, None # printag will collect the first error you encounter (used in Gradescope)
+
+
     for i in range(len(sentences)):
 
         printsent = "" # printsent is full printout for this sentence (only needed when to_print != 'none')
         sent, gold_deps = testsents[i][0], testsents[i][1]
+        print(f"gold_deps are: {gold_deps}")
+        # self.arcs = []
+        # self.vocab = vocab
+        # self.dep_to_head_mapping = {}
+
+        # # comment later later later on
+        # gold_deps_arcs_output = gold_deps.arcs
+        # gold_deps_vocab_output = gold_deps.vocab
+        # gold_deps_dep_to_head_mapping_output = gold_deps.dep_to_head_mapping
+        #
+        # print(f"gold_deps_arcs_output: {gold_deps_arcs_output}")
+        # print(f"gold_deps_vocab_output: {gold_deps_vocab_output}")
+        # print(f"gold_deps_dep_to_head_mapping_output: {gold_deps_dep_to_head_mapping_output}")
+
+        # gold_deps are: <__main__.Dependencies object at 0x7fb7e6e0ff10>
+        # gold_deps_arcs_output: [<__main__.Arc object at 0x7fb7e6e0fc70>, <__main__.Arc object at 0x7fb7e9e9d760>, <__main__.Arc object at 0x7fb7e9e9dd30>, <__main__.Arc object at 0x7fb7e9e9de80>, <__main__.Arc object at 0x7fb7e9e9d910>, <__main__.Arc object at 0x7fb7e6dc3160>, <__main__.Arc object at 0x7fb7e6dc3be0>, <__main__.Arc object at 0x7fb7e6dc3220>, <__main__.Arc object at 0x7fb7e6dc3d00>]
+        # gold_deps_vocab_output: <__main__.Vocabulary object at 0x7fb7e6e0f5e0>
+        # gold_deps_dep_to_head_mapping_output: {1: <__main__.Arc object at 0x7fb7e6e0fc70>, 2: <__main__.Arc object at 0x7fb7e9e9d760>, 3: <__main__.Arc object at 0x7fb7e9e9dd30>, 4: <__main__.Arc object at 0x7fb7e9e9de80>, 5: <__main__.Arc object at 0x7fb7e9e9d910>, 6: <__main__.Arc object at 0x7fb7e6dc3160>, 7: <__main__.Arc object at 0x7fb7e6dc3be0>, 8: <__main__.Arc object at 0x7fb7e6dc3220>, 9: <__main__.Arc object at 0x7fb7e6dc3d00>}
+
+
         if to_test == 'get_gold_action':
             printsent += 'gold_dependencies: ' +str([str(arc) for arc in gold_deps.arcs]) + '\n\n'
 
@@ -67,6 +97,7 @@ def sanityCheck(test_fxn, i=None, test_bundle=None, to_print = 'all', do_return=
                 tt = to_test[:-2] if to_test[-1] in {'1', '2'} else to_test
                 
                 exception=None
+
                 try:
                     yours = fxn()
                 except Exception as e:
@@ -182,10 +213,34 @@ def sanityCheckStackBuffer():
 
     sentence = [item1, item2, item3]
     sanity_buffer = Buffer(sentence)
+
+    # following methods exist in buffer class
+    # def __getitem__(self, idx):
+    #     return self.buffer[idx]
+    #
+    # def __len__(self):
+    #     return len(self.buffer)
+    #
+    # def __str__(self):
+    #     return str([str(x) for x in self.buffer])
+
+    # # comment later later later on
+    # sanity_buffer_get_bi_output = sanity_buffer.get_bi(1)
+    # sanity_buffer_get_item_output = sanity_buffer.__getitem__(1)
+    # sanity_buffer_get_len_output = sanity_buffer.__len__()
+    # sanity_buffer_get_str_output = sanity_buffer.__str__()
+    #
+    # print(f"sanity_buffer.get_bi(0): {sanity_buffer_get_bi_output}")
+    # print(f"sanity_buffer.__getitem__(1): {sanity_buffer_get_item_output}")
+    # print(f"sanity_buffer.__len__(): {sanity_buffer_get_len_output}")
+    # print(f"sanity_buffer.__str__(): {sanity_buffer_get_str_output}")
+
+
     p1 = False
     p2 = False
     p3 = False
     pop_item = sanity_buffer.pop()
+
     if (pop_item.idx == 0 and pop_item.word == 'she' and pop_item.pos == 'PRP'):
         p1 = True
     pop_item = sanity_buffer.pop()
@@ -390,8 +445,8 @@ class Vocabulary(object):
         for ex in examples:
             # Initialize words & dependencies
             words = [Word('<ROOT>', '<POS_ROOT>', 0, self.WORD_ROOT, self.POS_ROOT)]
-            deps = [] 
-          
+            deps = []
+
             # Loop over words in sentence
             for i  in  range(len(ex['word'])):
                 w = ex['word'][i]
@@ -399,17 +454,17 @@ class Vocabulary(object):
                 pos = self.POS_PREFIX + ex['pos'][i]
                 pos_id = self.tok2id[pos]
                 word = Word(ex['word'][i], ex['pos'][i],i+1, word_id, pos_id)
-                
+
                 words.append(word)
                 deps.append((ex['head'][i], word, ex['label'][i] ))
-            
+
             # Create dependencies
             dependencies = Dependencies(self)
             for dep in deps:
                 dependencies.add(words[dep[0]], dep[1], dep[2])
 
             processed_sentences.append((words, dependencies))
-                      
+
         return processed_sentences
 
 
@@ -494,8 +549,15 @@ class Dependencies(object):
             dependent: Word object
             label: str
         '''
+
+        # comment it out later
+        # print(f"head is: {head}")
+        # print(f"dependent is: {dependent}")
+        # print(f"label is: {label}")
+
         assert label[:3] != 'LA-' and label[:3] != 'RA-', 'You need to pass in just the label to add(...), not the entire action.'
         assert head is not None and dependent is not None, "You must pass in two Word objects to add(...)."
+
         self.arcs.append(Arc(head, dependent, label, self.vocab.tok2id[self.vocab.LABEL_PREFIX+label]))
         assert dependent.idx not in self.dep_to_head_mapping
         self.dep_to_head_mapping[dependent.idx] = self.arcs[-1]
@@ -518,7 +580,7 @@ class Dependencies(object):
 # 
 # Here, we provide you with the outline of stack and buffer data structures. Your task is to implement the `push(...)` and `pop(...)` methods of the `Stack`, and the `pop(...)` method of the `Buffer`. Each method is worth <b>2 points</b>.
 
-# In[15]:
+# In[11]:
 
 
 class Stack(object):
@@ -526,7 +588,8 @@ class Stack(object):
         '''
         Initialize an (empty) stack.
         '''
-        self.stack = [word.copy() for word in input] 
+        self.stack = [word.copy() for word in input]
+        # print(f"self.stack in init of Stack class is: {self.stack}")
 
     def push(self, item):
         '''
@@ -535,6 +598,17 @@ class Stack(object):
 
         ### TODO ###
         self.stack.append(item)
+
+
+
+        # print(f"Pushing item : {item}")
+        #Pushing item : Word(idx=0, word='she', pos='PRP', word_id=None, pos_id=None)
+
+        # print(f"Word object attributes : {item.__str__()}")
+        # Word object attributes : Word(idx=0, word='she', pos='PRP', word_id=None, pos_id=None)
+
+        # print(f"self.stack in Stack class push method is: {self.stack}")
+        # self.stack in Stack class push method is: [<__main__.Word object at 0x7fb1b0b1d1f0>]
 
         return None
 
@@ -548,7 +622,10 @@ class Stack(object):
         assert len(self.stack) > 0
 
         ### TODO ###
+        # print(f"self.stack before pop is: {self.stack}")
         popped_item = self.stack.pop()
+        # print(f"popped_item is: {popped_item}")
+        # print(f"self.stack after pop is: {self.stack}")
 
         # return None
         return popped_item
@@ -582,7 +659,14 @@ class Buffer(object):
         Pop item from (the beginning of) self.buffer. Returns the item popped.
         '''
         assert len(self.buffer) > 0
+
+        # print(f"self.buffer before pop is: {self.buffer}")
         popped_buffer_item =  self.buffer.pop(0)
+
+
+        # print(f"popped_item is: {popped_buffer_item}")
+        # print(f"self.buffer after pop is: {self.buffer}")
+
 
         ### TODO ###
 
@@ -609,7 +693,7 @@ class Buffer(object):
 
 # The code below runs a sanity check for your `Stack` and `Buffer` classes. The tests are similar to the hidden ones in Gradescope. However, note that passing the sanity check does <b>not</b> guarantee that you will pass the autograder; it is intended to help you debug.
 
-# In[17]:
+# In[12]:
 
 
 if __name__ == '__main__':
@@ -627,7 +711,7 @@ if __name__ == '__main__':
 # 
 # <font color='green'><b>Hint:</b> Use your `push(...)` and `pop(...)` operations here, and look at the methods of the `Dependencies` class to see how to add an arc to it.</font>
 
-# In[18]:
+# In[13]:
 
 
 class ParserConfiguration(object):
@@ -643,9 +727,40 @@ class ParserConfiguration(object):
         assert sentence[0].word_id == self.vocab.WORD_ROOT
         self.stack = Stack([sentence[0]]) # Initialize stack with ROOT
         self.buffer = Buffer(sentence[1:]) # Initialize buffer with sentence
+
+        # sentence in parser configuration is: [<__main__.Word object at 0x7f54916fb2b0>, <__main__.Word object at 0x7f54916fbf40>, <__main__.Word object at 0x7f54916fbfd0>, <__main__.Word object at 0x7f54916fb100>, <__main__.Word object at 0x7f54916fb9a0>, <__main__.Word object at 0x7f54916fb250>]
+        # print(f"sentence in parser configuration is: {sentence}")
+
+        # print(f"first word in sentence is: {sentence[0]}")
+        # first word in sentence is: Word(idx=0, word='<ROOT>', pos='<POS_ROOT>', word_id=72, pos_id=33)
+        # self.word = word
+        # self.pos = pos
+        # self.idx = idx
+        # self.word_id = word_id
+        # self.pos_id = pos_id
+
+
         self.dependencies = Dependencies(vocab)
 
+        # # comment later later later on
+        # dependencies_arcs_output = self.dependencies.arcs
+        # dependencies_vocab_output = self.dependencies.vocab
+        # dependencies_dep_to_head_mapping_output = self.dependencies.dep_to_head_mapping
+        #
+        # print(f"dependencies_arcs_output: {dependencies_arcs_output}")
+        # print(f"dependencies_vocab_output: {dependencies_vocab_output}")
+        # print(f"dependencies_dep_to_head_mapping_output: {dependencies_dep_to_head_mapping_output}")
+
+        # self.dependencies: <__main__.Dependencies object at 0x7f549168bf40>
+        # print(f"self.dependencies: {self.dependencies}")
+
+        # gold_deps are: <__main__.Dependencies object at 0x7fb7e6e0ff10>
+        # gold_deps_arcs_output: [<__main__.Arc object at 0x7fb7e6e0fc70>, <__main__.Arc object at 0x7fb7e9e9d760>, <__main__.Arc object at 0x7fb7e9e9dd30>, <__main__.Arc object at 0x7fb7e9e9de80>, <__main__.Arc object at 0x7fb7e9e9d910>, <__main__.Arc object at 0x7fb7e6dc3160>, <__main__.Arc object at 0x7fb7e6dc3be0>, <__main__.Arc object at 0x7fb7e6dc3220>, <__main__.Arc object at 0x7fb7e6dc3d00>]
+        # gold_deps_vocab_output: <__main__.Vocabulary object at 0x7fb7e6e0f5e0>
+        # gold_deps_dep_to_head_mapping_output: {1: <__main__.Arc object at 0x7fb7e6e0fc70>, 2: <__main__.Arc object at 0x7fb7e9e9d760>, 3: <__main__.Arc object at 0x7fb7e9e9dd30>, 4: <__main__.Arc object at 0x7fb7e9e9de80>, 5: <__main__.Arc object at 0x7fb7e9e9d910>, 6: <__main__.Arc object at 0x7fb7e6dc3160>, 7: <__main__.Arc object at 0x7fb7e6dc3be0>, 8: <__main__.Arc object at 0x7fb7e6dc3220>, 9: <__main__.Arc object at 0x7fb7e6dc3d00>}
+
     def parse_step(self, transition):
+        #TODO: how can I test parse_Step?
         '''
         Update stack, buffer, and dependencies based on transition.
         Inputs:
@@ -653,9 +768,52 @@ class ParserConfiguration(object):
         '''
         assert transition in self.vocab.tran2id
 
+        # print(f"transition is: {transition}")
         ### TODO ###
+        # print(f"self.stack before pop is: {self.stack}")
+        popped_item = self.stack.pop()
+        # print(f"popped_item is: {popped_item}")
+        # print(f"self.stack after pop is: {self.stack}")
 
-        
+        # head is: Word(idx=3, word='had', pos='VBD', word_id=48, pos_id=26)
+        # dependent is: Word(idx=2, word='news', pos='NN', word_id=55, pos_id=23)
+        # label is: nsubj
+
+        label = transition[3:]
+
+
+        if transition[0] == "S":
+            buffer_pop_output = self.buffer.pop()
+            self.stack.push(buffer_pop_output)
+
+        #TODO: How to check the following??
+        elif transition[0] == "L":
+            w_i = self.stack.get_si(2)
+            w_j = self.stack.get_si(1)
+            head = w_j
+            dependent = w_i
+
+            #need to pop w_i
+            w_j_stack = self.stack.pop()
+            w_i_stack = self.stack.pop()
+            self.stack.push(w_j_stack)
+
+            self.dependencies.append(Arc(head, dependent, label, self.dependencies.vocab.tok2id[self.vocab.LABEL_PREFIX+label]))
+            self.dependencies.dep_to_head_mapping[dependent.idx] = self.dependencies.arcs[-1]
+
+
+        elif transition[0] == "R":
+            w_i = self.stack.get_si(2)
+            w_j = self.stack.get_si(1)
+            head = w_i
+            dependent = w_j
+
+            w_j_stack = self.stack.pop()
+
+
+            self.dependencies.append(Arc(head, dependent, label, self.dependencies.vocab.tok2id[self.vocab.LABEL_PREFIX+label]))
+            self.dependencies.dep_to_head_mapping[dependent.idx] = self.dependencies.arcs[-1]
+
         pass
 
 
@@ -683,7 +841,7 @@ class ParserConfiguration(object):
 # 
 # <font color='green'><b>Hint:</b> To get the $i$th word on the stack or buffer, call `stack.get_si(i)` or `buffer.get_bi(i)`. To find the head of a word `w`, call `gold_dependencies.getArcToHead(w)`.</font>
 
-# In[19]:
+# In[14]:
 
 
 def get_gold_action(stack, buffer, gold_dependencies):
@@ -698,9 +856,91 @@ def get_gold_action(stack, buffer, gold_dependencies):
     '''
     action = None
 
+    # def __getitem__(self, idx):
+    #     return self.stack[idx]
+    #
+    # def __len__(self):
+    #     return len(self.stack)
+    #
+    # def __str__(self):
+    #     return str([str(x) for x in self.stack])
+
     ### TODO ###
+    s1 = stack.get_si(1)
+    print(f"s1 is: {s1}")
+
+    s2 = stack.get_si(2)
+    print(f"s2 is: {s2}")
+
+    h_of_b_i = False
+    print(f"h_of_b_i is : {h_of_b_i}")
+
+    for b_i in buffer:
+        if gold_dependencies.getArcToHead(b_i).head == s1:
+            h_of_b_i = True
+            print(f"h_of_b_i ==s1 and hence flag is : {h_of_b_i}")
+            break
+
+
+
+    if stack.__len__() == 1:     #TODO: len()
+        if stack.__getitem__(0).word == '<ROOT>':  #TODO
+            if buffer.__len__() > 0:
+                # return 'S'
+                action = 'S'
+                return action
+            elif buffer.__len__() == 0:
+                # return 'DONE'
+                action = 'DONE'
+                return action
+
+    elif gold_dependencies.getArcToHead(s2).head == s1:
+        arc_to_head = gold_dependencies.getArcToHead(s2)
+        print(f"arc_to_head: {arc_to_head}")
+
+        arc_to_head_label = arc_to_head.label
+        print(f"arc_to_head label: {arc_to_head.label}")
+
+        # sanity_buffer.get_bi(0): Word(idx=0, word='she', pos='PRP', word_id=None, pos_id=None)
+        # sanity_buffer.__getitem__(1): Word(idx=1, word='is', pos='VBP', word_id=None, pos_id=None)
+
+        # return 'LA-' + arc_to_head_label
+        action = 'LA-' + arc_to_head_label
+        return action
+
+    # If $h(s_1)=s_2$ <b>and</b> $h(b_i) \neq s_1$ for all words $b_i$ in the buffer, return `RA-label`. Here, `label` is the label of the arc that attaches $s_1$ to $s_2$.
+    #  - This condition means that you cannot attach $s_1$ until everything in the buffer that depends on $s_1$ is attached. You should think about why this condition is necessary!
+
+    elif gold_dependencies.getArcToHead(s1).head == s2 and h_of_b_i:
+        arc_to_head = gold_dependencies.getArcToHead(s1)
+        print(f"arc_to_head: {arc_to_head}")
+
+        arc_to_head_label = arc_to_head.label
+        print(f"arc_to_head label: {arc_to_head.label}")
+
+        # sanity_buffer.get_bi(0): Word(idx=0, word='she', pos='PRP', word_id=None, pos_id=None)
+        # sanity_buffer.__getitem__(1): Word(idx=1, word='is', pos='VBP', word_id=None, pos_id=None)
+
+        # return 'RA-' + arc_to_head_label
+        action = 'RA-' + arc_to_head_label
+        return action
+
+    # 4. Otherwise:
+    #  - If the buffer is not empty, return `S`.
+    #  - If the buffer is empty, return `None`, indicating a failed parse (i.e., the sentence is non-projective).
+
+    elif buffer.__len__() != 0:
+        # return 'S'
+        action = 'S'
+        return action
+
+    elif buffer.__len__() == 0:
+        # return 'None'
+        action = 'None'
+        return action
+
     
-    return action
+    # return action
 
 
 # We provide you with 10 sentences for a sanity check of this function. The first sentence is the example from the lecture slides, the next 8 sentences are artificial sentences designed to test edge cases, and the last sentence is an example from the training set. For each sentence, we have hard-coded the stack & buffer configurations that you should encounter as well as the correct action.
@@ -714,7 +954,13 @@ def get_gold_action(stack, buffer, gold_dependencies):
 # 
 # Note that Gradescope uses a set of different (hidden) tests, so you will want to fully test your code here.
 
-# In[20]:
+# In[14]:
+
+
+
+
+
+# In[15]:
 
 
 if __name__ == '__main__':
@@ -730,7 +976,7 @@ if __name__ == '__main__':
 # 
 # This function is worth <b>8 points</b>.
 
-# In[ ]:
+# In[16]:
 
 
 def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract = lambda parser_config: []):
@@ -761,7 +1007,7 @@ def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract 
 
 # We provide you with a sanity check for this function on the same test sentences we used above.
 
-# In[ ]:
+# In[17]:
 
 
 if __name__ == '__main__':
@@ -770,7 +1016,7 @@ if __name__ == '__main__':
 
 # The following function calls `generate_training_examples(...)` on every sentence in the dataset to create the full training data. You do <b>not</b> need to edit it.
 
-# In[ ]:
+# In[18]:
 
 
 ### DO NOT EDIT ###
@@ -793,7 +1039,7 @@ def generate_all_training_examples(vocab, sentences, feat_extract = lambda parse
     return all_training_examples
 
 
-# In[ ]:
+# In[19]:
 
 
 ### DO NOT EDIT ###
@@ -836,6 +1082,7 @@ def get_top3_stack_features(parser_config):
     word_features, pos_features = [parser_config.vocab.WORD_NULL]*3, [parser_config.vocab.POS_NULL]*3
 
     ### TODO ###
+
     
     return None, None
 
