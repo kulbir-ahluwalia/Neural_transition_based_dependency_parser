@@ -711,9 +711,12 @@ class ParserConfiguration(object):
         Inputs:
             transition: str, "S", "LA-label", or "RA-label", where label is a valid label
         '''
+        print(f"self.vocab.tran2id : {self.vocab.tran2id}")
+        print(f"transition is: {transition}")
+
         assert transition in self.vocab.tran2id
 
-        # print(f"transition is: {transition}")
+
         ### DONE ###
         # print(f"self.stack before pop is: {self.stack}")
         # popped_item = self.stack.pop()
@@ -790,7 +793,7 @@ class ParserConfiguration(object):
 # 
 # <font color='green'><b>Hint:</b> To get the $i$th word on the stack or buffer, call `stack.get_si(i)` or `buffer.get_bi(i)`. To find the head of a word `w`, call `gold_dependencies.getArcToHead(w)`.</font>
 
-# In[22]:
+# In[14]:
 
 
 def get_gold_action(stack, buffer, gold_dependencies):
@@ -815,13 +818,13 @@ def get_gold_action(stack, buffer, gold_dependencies):
     #     return str([str(x) for x in self.stack])
 
     ### TODO ###
-    print(f"stack is :{str(stack)}")
-    print(f"buffer is :{str(buffer)}")
+    # print(f"stack is :{str(stack)}")
+    # print(f"buffer is :{str(buffer)}")
     s1 = stack.get_si(1)
-    print(f"s1 is: {s1}")
+    # print(f"s1 is: {s1}")
 
     s2 = stack.get_si(2)
-    print(f"s2 is: {s2}\n")
+    # print(f"s2 is: {s2}\n")
 
 
 
@@ -832,23 +835,23 @@ def get_gold_action(stack, buffer, gold_dependencies):
             # if buffer.__len__() > 0:
             if len(buffer) > 0:
                 # return 'S'
-                print(f"len of buffer {len(buffer)} > 0 and there is only root in the stack hence action = 'S'")
+                # print(f"len of buffer {len(buffer)} > 0 and there is only root in the stack hence action = 'S'")
                 action = 'S'
                 return action
 
             # elif buffer.__len__() == 0:
             elif len(buffer) == 0:
                 # return 'DONE'
-                print(f"len of buffer {len(buffer)} == 0 and there is only root in the stack hence action = 'DONE'")
+                # print(f"len of buffer {len(buffer)} == 0 and there is only root in the stack hence action = 'DONE'")
                 action = 'DONE'
                 return action
 
     elif gold_dependencies.getArcToHead(s2).head == s1:
         arc_to_head = gold_dependencies.getArcToHead(s2)
-        print(f"arc_to_head in left action: {arc_to_head}")
+        # print(f"arc_to_head in left action: {arc_to_head}")
 
         arc_to_head_label = arc_to_head.label
-        print(f"arc_to_head label in left action: {arc_to_head.label}")
+        # print(f"arc_to_head label in left action: {arc_to_head.label}")
 
         # sanity_buffer.get_bi(0): Word(idx=0, word='she', pos='PRP', word_id=None, pos_id=None)
         # sanity_buffer.__getitem__(1): Word(idx=1, word='is', pos='VBP', word_id=None, pos_id=None)
@@ -861,7 +864,6 @@ def get_gold_action(stack, buffer, gold_dependencies):
     #  - This condition means that you cannot attach $s_1$ until everything in the buffer that depends on $s_1$ is attached. You should think about why this condition is necessary!
 
     elif gold_dependencies.getArcToHead(s1).head == s2:
-        h_of_b_i = True
         h_of_b_i_list = []
         # print(f"h_of_b_i  in right arc is : {h_of_b_i}")
 
@@ -877,8 +879,8 @@ def get_gold_action(stack, buffer, gold_dependencies):
                 h_of_b_i_list.append(0)
 
         h_of_b_i_list_sum = sum(h_of_b_i_list)
-        print(f"h_of_b_i_list: {h_of_b_i_list}")
-        print(f"h_of_b_i_list sum is: {h_of_b_i_list_sum}")
+        # print(f"h_of_b_i_list: {h_of_b_i_list}")
+        # print(f"h_of_b_i_list sum is: {h_of_b_i_list_sum}")
 
         if gold_dependencies.getArcToHead(s1).head == s2 and (h_of_b_i_list_sum==0):
             arc_to_head = gold_dependencies.getArcToHead(s1)
@@ -898,17 +900,15 @@ def get_gold_action(stack, buffer, gold_dependencies):
     #  - If the buffer is not empty, return `S`.
     #  - If the buffer is empty, return `None`, indicating a failed parse (i.e., the sentence is non-projective).
 
-    # elif buffer.__len__() != 0:
-    elif len(buffer) != 0:
+    if len(buffer) != 0:
         # return 'S'
-        print(f"len of buffer is greater than zero :{len(buffer)} and hence action = 'S'")
+        # print(f"len of buffer is greater than zero :{len(buffer)} and hence action = 'S'")
         action = 'S'
         return action
 
-    # elif buffer.__len__() == 0:
-    elif len(buffer) == 0:
+    if len(buffer) == 0:
         # return 'None'
-        print(f"len of buffer is zero :{len(buffer)} and hence action = None")
+        # print(f"len of buffer is zero :{len(buffer)} and hence action = None")
         action = None
         # action = 'S'
         return action
@@ -931,13 +931,13 @@ def get_gold_action(stack, buffer, gold_dependencies):
 # 
 # Note that Gradescope uses a set of different (hidden) tests, so you will want to fully test your code here.
 
-# In[22]:
+# In[14]:
 
 
 
 
 
-# In[23]:
+# In[15]:
 
 
 if __name__ == '__main__':
@@ -954,7 +954,7 @@ if __name__ == '__main__':
 # 
 # This function is worth <b>8 points</b>.
 
-# In[16]:
+# In[22]:
 
 
 def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract = lambda parser_config: []):
@@ -978,14 +978,43 @@ def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract 
 
     training_examples = []
 
-    ### TODO ###
+    parser_config = ParserConfiguration(sentence, vocab)
+    stack = parser_config.stack
+    buffer = parser_config.buffer
+    # parser_config.dependencies = gold_dependencies
 
-    return None
+    # def get_gold_action(stack, buffer, gold_dependencies):
+    # '''
+    # Given stack & buffer, compute the next gold action based on gold_dependencies.
+    # Args:
+    #     - stack: Stack object
+    #     - buffer: Buffer object
+    #     - gold_dependencies: Dependencies object
+    # Returns:
+    #     - action: str; 'S', 'LA-label', or 'RA-label', where 'label' is a valid label. Return None if no action possible and 'DONE' if the parse is complete.
+    # '''
+    while get_gold_action(stack, buffer, gold_dependencies) != 'DONE':
+        gold_action =  get_gold_action(stack, buffer, gold_dependencies)
+        # print(f"gold_action outside none check: {gold_action}")
+
+        if get_gold_action(stack, buffer, gold_dependencies) is None:
+            # gold_action =  get_gold_action(stack, buffer, gold_dependencies)
+            # print(f"gold_action in NONE check: {gold_action}")
+            return []
+
+        elif get_gold_action(stack, buffer, gold_dependencies) is not None:
+            # gold_action =  get_gold_action(stack, buffer, gold_dependencies)
+            # print(f"gold_action in != NONE check: {gold_action}")
+            features = feat_extract(parser_config)
+            training_examples.append((features, gold_action))
+            parser_config.parse_step(gold_action)
+
+    return training_examples
 
 
 # We provide you with a sanity check for this function on the same test sentences we used above.
 
-# In[17]:
+# In[23]:
 
 
 if __name__ == '__main__':
@@ -994,7 +1023,7 @@ if __name__ == '__main__':
 
 # The following function calls `generate_training_examples(...)` on every sentence in the dataset to create the full training data. You do <b>not</b> need to edit it.
 
-# In[18]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -1017,7 +1046,7 @@ def generate_all_training_examples(vocab, sentences, feat_extract = lambda parse
     return all_training_examples
 
 
-# In[19]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -1204,6 +1233,8 @@ def get_rc1_rc2_features(parser_config, i):
     word_features, pos_features, label_features = [parser_config.vocab.WORD_NULL]*2, [parser_config.vocab.POS_NULL]*2, [parser_config.vocab.LABEL_NULL]*2
 
     ### TODO ###
+
+
     
     return None, None, None
 
