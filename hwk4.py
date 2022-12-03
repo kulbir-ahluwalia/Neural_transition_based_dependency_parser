@@ -14,7 +14,7 @@
 # 
 # The following cells set up the tests that you can use in the notebook. You should <b>not</b> edit any of these cells.
 
-# In[1]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     testing_bundle = cp.load(urlopen("https://drive.google.com/uc?export=download&id=1-9lWbXuXZYGjJWQRKD7um_83O-I3ER63"))
 
 
-# In[2]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -246,7 +246,7 @@ def sanityCheckModel(all_test_params, model, expected_outputs, init_or_forward, 
 # 
 # 
 
-# In[3]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -265,7 +265,7 @@ import random
 # 
 # Run the following cells to load the data and see the number of sentences. You do <b>not</b> need to edit these cells.
 
-# In[4]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -276,7 +276,7 @@ def load_data():
     return train_set, test_set
 
 
-# In[5]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -289,7 +289,7 @@ if __name__ == '__main__':
 
 # Next, we visualize the training data, which contains labeled dependency trees. At test time, our goal will be to predict the dependency arcs & labels for a given sentence.
 
-# In[6]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -310,7 +310,7 @@ def display_sentence(sent):
     displacy.render(res, style="dep", manual=True, jupyter=True, options={'distance': 70})
 
 
-# In[7]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -325,7 +325,7 @@ if __name__ == '__main__':
 # 
 # You do <b>not</b> need to edit this cell.
 
-# In[8]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -415,7 +415,7 @@ class Vocabulary(object):
 
 # Run the following cell to see some stats from the vocabulary.
 
-# In[9]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -431,7 +431,7 @@ if __name__ == '__main__':
 # 
 # First, we define some data classes that you will find useful. You will be working with these a lot, so you should understand the data they contain as well as their methods. You do <b>not</b> need to edit this cell.
 
-# In[10]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -525,7 +525,7 @@ class Dependencies(object):
 # 
 # Here, we provide you with the outline of stack and buffer data structures. Your task is to implement the `push(...)` and `pop(...)` methods of the `Stack`, and the `pop(...)` method of the `Buffer`. Each method is worth <b>2 points</b>.
 
-# In[11]:
+# In[ ]:
 
 
 class Stack(object):
@@ -638,7 +638,7 @@ class Buffer(object):
 
 # The code below runs a sanity check for your `Stack` and `Buffer` classes. The tests are similar to the hidden ones in Gradescope. However, note that passing the sanity check does <b>not</b> guarantee that you will pass the autograder; it is intended to help you debug.
 
-# In[12]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -656,7 +656,7 @@ if __name__ == '__main__':
 # 
 # <font color='green'><b>Hint:</b> Use your `push(...)` and `pop(...)` operations here, and look at the methods of the `Dependencies` class to see how to add an arc to it.</font>
 
-# In[13]:
+# In[ ]:
 
 
 class ParserConfiguration(object):
@@ -793,7 +793,7 @@ class ParserConfiguration(object):
 # 
 # <font color='green'><b>Hint:</b> To get the $i$th word on the stack or buffer, call `stack.get_si(i)` or `buffer.get_bi(i)`. To find the head of a word `w`, call `gold_dependencies.getArcToHead(w)`.</font>
 
-# In[14]:
+# In[ ]:
 
 
 def get_gold_action(stack, buffer, gold_dependencies):
@@ -931,13 +931,13 @@ def get_gold_action(stack, buffer, gold_dependencies):
 # 
 # Note that Gradescope uses a set of different (hidden) tests, so you will want to fully test your code here.
 
-# In[14]:
+# In[ ]:
 
 
 
 
 
-# In[15]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -954,7 +954,7 @@ if __name__ == '__main__':
 # 
 # This function is worth <b>8 points</b>.
 
-# In[16]:
+# In[ ]:
 
 
 def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract = lambda parser_config: []):
@@ -1016,7 +1016,7 @@ def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract 
 
 # We provide you with a sanity check for this function on the same test sentences we used above.
 
-# In[17]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -1025,7 +1025,7 @@ if __name__ == '__main__':
 
 # The following function calls `generate_training_examples(...)` on every sentence in the dataset to create the full training data. You do <b>not</b> need to edit it.
 
-# In[18]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -1048,7 +1048,7 @@ def generate_all_training_examples(vocab, sentences, feat_extract = lambda parse
     return all_training_examples
 
 
-# In[19]:
+# In[ ]:
 
 
 ### DO NOT EDIT ###
@@ -1078,7 +1078,7 @@ if __name__ == '__main__':
 # 
 # Wherever a particular word does not exist (such as when the stack or buffer has length $< 3$) use the appropriate NULL token. This is necessary to ensure that our neural network will see an equally sized feature vector for each example.
 
-# In[20]:
+# In[ ]:
 
 
 def get_top3_stack_features(parser_config):
@@ -1119,14 +1119,14 @@ def get_top3_stack_features(parser_config):
     return word_features, pos_features
 
 
-# In[21]:
+# In[ ]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_top3_stack_features, to_print='incorrect', do_raise=True)
 
 
-# In[22]:
+# In[ ]:
 
 
 def get_top3_buffer_features(parser_config):
@@ -1151,7 +1151,7 @@ def get_top3_buffer_features(parser_config):
     return word_features, pos_features
 
 
-# In[23]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -1166,7 +1166,7 @@ if __name__ == '__main__':
 # 
 # <font color='green'><b>Hint:</b> Each of these functions can be written in as few as 1 line. If you find yourself using more than 5 lines, you are probably doing more work than you need to.</font>
 
-# In[24]:
+# In[ ]:
 
 
 def get_lc(parser_config, word):
@@ -1204,14 +1204,14 @@ def get_lc(parser_config, word):
     return arc_list_sorted
 
 
-# In[25]:
+# In[ ]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_lc, to_print='incorrect', do_raise=True)
 
 
-# In[26]:
+# In[ ]:
 
 
 def get_rc(parser_config, word):
@@ -1248,7 +1248,7 @@ def get_rc(parser_config, word):
     return list_of_arcs_reversed
 
 
-# In[27]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -1260,7 +1260,7 @@ if __name__ == '__main__':
 # 
 # We will call this function with `i=1` and `i=2`, accounting for the words $lc_1(s_1)$, $lc_2(s_1)$, $lc_1(s_2)$, $lc_2(s_2)$.
 
-# In[54]:
+# In[ ]:
 
 
 def get_lc1_lc2_features(parser_config, i):
@@ -1348,14 +1348,14 @@ def get_lc1_lc2_features(parser_config, i):
     return word_features, pos_features, label_features
 
 
-# In[55]:
+# In[ ]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_lc1_lc2_features, i=1, to_print='incorrect', do_raise=True) # call with i=1
 
 
-# In[56]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -1367,7 +1367,7 @@ if __name__ == '__main__':
 # 
 # We will call this function with `i=1` and `i=2`, accounting for the words $rc_1(s_1)$, $rc_2(s_1)$, $rc_1(s_2)$, $rc_2(s_2)$.
 
-# In[57]:
+# In[ ]:
 
 
 def get_rc1_rc2_features(parser_config, i):
@@ -1423,14 +1423,14 @@ def get_rc1_rc2_features(parser_config, i):
     return word_features, pos_features, label_features
 
 
-# In[58]:
+# In[ ]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_rc1_rc2_features, i=1, to_print='incorrect', do_raise=True) # call with i=1
 
 
-# In[59]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -1457,38 +1457,73 @@ def get_llc_rrc_features(parser_config, i):
     word_features, pos_features, label_features = [parser_config.vocab.WORD_NULL]*2, [parser_config.vocab.POS_NULL]*2, [parser_config.vocab.LABEL_NULL]*2
 
     ### TODO ###
-        if parser_config.stack.get_si(i) is not None:
+    if parser_config.stack.get_si(i) is not None:
 
         s_i = (parser_config.stack.get_si(i))
 
-        arc_list_sorted = get_rc(parser_config, s_i)
+        arc_list_sorted_rc = get_rc(parser_config, s_i)
+        arc_list_sorted_lc = get_lc(parser_config, s_i)
+
         # print(f"arc_list_sorted: {arc_list_sorted}")
+        jth_rightmost_child_arcs = arc_list_sorted_rc[:1]
+        jth_leftmost_child_arcs = arc_list_sorted_lc[:1]
 
-
-        jth_leftmost_child_arcs = arc_list_sorted[:2]
         # print(f"jth_leftmost_child_arcs: {jth_leftmost_child_arcs}")
-
-        jth_rightmost_child_words = [arc.dependent for arc in jth_leftmost_child_arcs]
-        jth_rightmost_child_labels = [arc.label_id for arc in jth_leftmost_child_arcs]
-
+        jth_rightmost_child_words = [arc.dependent for arc in jth_rightmost_child_arcs]
+        jth_rightmost_child_labels = [arc.label_id for arc in jth_rightmost_child_arcs]
         # print(f"jth_rightmost_child_words: {jth_rightmost_child_words}")
         # print(f"jth_leftmost_child_labels: {jth_rightmost_child_labels}")
 
+        jth_leftmost_child_words = [arc.dependent for arc in jth_leftmost_child_arcs]
+        jth_leftmost_child_labels = [arc.label_id for arc in jth_leftmost_child_arcs]
+        # print(f"jth_leftmost_child_words: {jth_leftmost_child_words}")
+        # print(f"jth_leftmost_child_labels: {jth_leftmost_child_labels}")
 
-        if len(jth_rightmost_child_words) >= 1:
-            # for k in range (1,2):
-            k = 1
-            word_object = jth_rightmost_child_words[k-1]
-            word_features[k-1] = word_object.word_id
-            pos_features[k-1] = jth_rightmost_child_words[k-1].pos_id
-            label_features[k-1] = jth_rightmost_child_labels[k-1]
+        if len(jth_rightmost_child_words) >=1:
+            arc_list_sorted_2 = get_rc(parser_config, jth_rightmost_child_words[0])
+            jth_rightmost_child_arcs_2 = arc_list_sorted_2[:1]
+            jth_rightmost_child_words_2 = [arc.dependent for arc in jth_rightmost_child_arcs_2]
+            jth_rightmost_child_labels_2 = [arc.label_id for arc in jth_rightmost_child_arcs_2]
+            #
+            # print(f"jth_rightmost_child_words_2: {jth_rightmost_child_words_2}")
+            # print(f"jth_rightmost_child_labels_2: {jth_rightmost_child_labels_2}")
 
-            if len(jth_rightmost_child_words) >= 2:
-                k = 2
-                word_object = jth_rightmost_child_words[k-1]
-                word_features[k-1] = word_object.word_id
-                pos_features[k-1] = jth_rightmost_child_words[k-1].pos_id
-                label_features[k-1] = jth_rightmost_child_labels[k-1]
+
+            if len(jth_rightmost_child_words_2) >= 1:
+                # for k in range (1,2):
+                # k = 1
+                word_object = jth_rightmost_child_words_2[0]
+                word_features[1] = word_object.word_id
+                pos_features[1] = jth_rightmost_child_words_2[0].pos_id
+                label_features[1] = jth_rightmost_child_labels_2[0]
+
+
+
+        if len(jth_leftmost_child_words) >=1:
+            arc_list_sorted_2_lc = get_lc(parser_config, jth_leftmost_child_words[0])
+            jth_leftmost_child_arcs_2 = arc_list_sorted_2_lc[:1]
+            jth_leftmost_child_words_2 = [arc.dependent for arc in jth_leftmost_child_arcs_2]
+            jth_leftmost_child_labels_2 = [arc.label_id for arc in jth_leftmost_child_arcs_2]
+
+            # print(f"jth_leftmost_child_words_2: {jth_leftmost_child_words_2}")
+            # print(f"jth_leftmost_child_labels_2: {jth_leftmost_child_labels_2}")
+
+
+            if len(jth_leftmost_child_words_2) >= 1:
+                # for k in range (1,2):
+                # k = 1
+                word_object = jth_leftmost_child_words_2[0]
+                word_features[0] = word_object.word_id
+                pos_features[0] = jth_leftmost_child_words_2[0].pos_id
+                label_features[0] = jth_leftmost_child_labels_2[0]
+
+
+                # if len(jth_rightmost_child_words) >= 2:
+                #     k = 2
+                #     word_object = jth_rightmost_child_words[k-1]
+                #     word_features[k-1] = word_object.word_id
+                #     pos_features[k-1] = jth_rightmost_child_words[k-1].pos_id
+                #     label_features[k-1] = jth_rightmost_child_labels[k-1]
 
     elif parser_config.stack.get_si(i) is None:
         pass
