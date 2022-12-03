@@ -1078,7 +1078,7 @@ if __name__ == '__main__':
 # 
 # Wherever a particular word does not exist (such as when the stack or buffer has length $< 3$) use the appropriate NULL token. This is necessary to ensure that our neural network will see an equally sized feature vector for each example.
 
-# In[38]:
+# In[20]:
 
 
 def get_top3_stack_features(parser_config):
@@ -1119,14 +1119,14 @@ def get_top3_stack_features(parser_config):
     return word_features, pos_features
 
 
-# In[39]:
+# In[21]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_top3_stack_features, to_print='incorrect', do_raise=True)
 
 
-# In[45]:
+# In[22]:
 
 
 def get_top3_buffer_features(parser_config):
@@ -1151,7 +1151,7 @@ def get_top3_buffer_features(parser_config):
     return word_features, pos_features
 
 
-# In[46]:
+# In[23]:
 
 
 if __name__ == '__main__':
@@ -1166,7 +1166,7 @@ if __name__ == '__main__':
 # 
 # <font color='green'><b>Hint:</b> Each of these functions can be written in as few as 1 line. If you find yourself using more than 5 lines, you are probably doing more work than you need to.</font>
 
-# In[91]:
+# In[24]:
 
 
 def get_lc(parser_config, word):
@@ -1204,14 +1204,14 @@ def get_lc(parser_config, word):
     return arc_list_sorted
 
 
-# In[92]:
+# In[25]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_lc, to_print='incorrect', do_raise=True)
 
 
-# In[97]:
+# In[26]:
 
 
 def get_rc(parser_config, word):
@@ -1248,7 +1248,7 @@ def get_rc(parser_config, word):
     return list_of_arcs_reversed
 
 
-# In[98]:
+# In[27]:
 
 
 if __name__ == '__main__':
@@ -1260,10 +1260,11 @@ if __name__ == '__main__':
 # 
 # We will call this function with `i=1` and `i=2`, accounting for the words $lc_1(s_1)$, $lc_2(s_1)$, $lc_1(s_2)$, $lc_2(s_2)$.
 
-# In[ ]:
+# In[54]:
 
 
 def get_lc1_lc2_features(parser_config, i):
+
     '''
     Get the word, POS, and label features for lc1(si) and lc2(si), where i in {1, 2}
     Returns:
@@ -1275,18 +1276,86 @@ def get_lc1_lc2_features(parser_config, i):
     word_features, pos_features, label_features = [parser_config.vocab.WORD_NULL]*2, [parser_config.vocab.POS_NULL]*2, [parser_config.vocab.LABEL_NULL]*2
 
     ### TODO ###
+    # def get_lc(parser_config, word):
+    # '''
+    # Finds the left dependents of word, sorted from left to right.
+    # Returns:
+    #     A list of Arcs whose head is word, sorted by the indices of the dependent word from left to right.
+    # '''
+
+    # def get_rc(parser_config, word):
+    # '''
+    # Finds the right dependents of word, sorted from right to left.
+    # Returns:
+    #     A list of Arcs whose head is word, sorted by the indices of the dependent word from right to left.
+    # '''
+
+
+    # class Arc(object):
+    # '''
+    # Represents an arc between two words.
+    # '''
+    #
+    #     def __init__(self, head, dependent, label, label_id):
+    #         self.head=head # Word object
+    #         self.dependent=dependent # Word object
+    #         self.label=label
+    #         self.label_id = label_id
+    #
+    #     def __str__(self):
+    #         return 'Arc(head_idx='+str(self.head.idx)+', dep_idx='+str(self.dependent.idx)+', label_id='+ str(self.label_id)+')'
+
+
+    # for i in range(1,3):
+    if parser_config.stack.get_si(i) is not None:
+
+        s_i = (parser_config.stack.get_si(i))
+
+        arc_list_sorted = get_lc(parser_config, s_i)
+        # print(f"arc_list_sorted: {arc_list_sorted}")
+
+
+        jth_leftmost_child_arcs = arc_list_sorted[:2]
+        # print(f"jth_leftmost_child_arcs: {jth_leftmost_child_arcs}")
+
+        jth_leftmost_child_words = [arc.dependent for arc in jth_leftmost_child_arcs]
+        jth_leftmost_child_labels = [arc.label_id for arc in jth_leftmost_child_arcs]
+
+        # print(f"jth_leftmost_child_words: {jth_leftmost_child_words}")
+        # print(f"jth_leftmost_child_labels: {jth_leftmost_child_labels}")
+
+
+        if len(jth_leftmost_child_words) >= 1:
+            # for k in range (1,2):
+            k = 1
+            word_object = jth_leftmost_child_words[k-1]
+            word_features[k-1] = word_object.word_id
+            pos_features[k-1] = jth_leftmost_child_words[k-1].pos_id
+            label_features[k-1] = jth_leftmost_child_labels[k-1]
+
+            if len(jth_leftmost_child_words) >= 2:
+                k = 2
+                word_object = jth_leftmost_child_words[k-1]
+                word_features[k-1] = word_object.word_id
+                pos_features[k-1] = jth_leftmost_child_words[k-1].pos_id
+                label_features[k-1] = jth_leftmost_child_labels[k-1]
+
+    elif parser_config.stack.get_si(i) is None:
+        pass
+
+
     
-    return None, None, None
+    return word_features, pos_features, label_features
 
 
-# In[ ]:
+# In[55]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_lc1_lc2_features, i=1, to_print='incorrect', do_raise=True) # call with i=1
 
 
-# In[ ]:
+# In[56]:
 
 
 if __name__ == '__main__':
@@ -1298,7 +1367,7 @@ if __name__ == '__main__':
 # 
 # We will call this function with `i=1` and `i=2`, accounting for the words $rc_1(s_1)$, $rc_2(s_1)$, $rc_1(s_2)$, $rc_2(s_2)$.
 
-# In[ ]:
+# In[57]:
 
 
 def get_rc1_rc2_features(parser_config, i):
@@ -1313,20 +1382,55 @@ def get_rc1_rc2_features(parser_config, i):
     word_features, pos_features, label_features = [parser_config.vocab.WORD_NULL]*2, [parser_config.vocab.POS_NULL]*2, [parser_config.vocab.LABEL_NULL]*2
 
     ### TODO ###
+    if parser_config.stack.get_si(i) is not None:
+
+        s_i = (parser_config.stack.get_si(i))
+
+        arc_list_sorted = get_rc(parser_config, s_i)
+        # print(f"arc_list_sorted: {arc_list_sorted}")
 
 
-    
-    return None, None, None
+        jth_leftmost_child_arcs = arc_list_sorted[:2]
+        # print(f"jth_leftmost_child_arcs: {jth_leftmost_child_arcs}")
+
+        jth_rightmost_child_words = [arc.dependent for arc in jth_leftmost_child_arcs]
+        jth_rightmost_child_labels = [arc.label_id for arc in jth_leftmost_child_arcs]
+
+        # print(f"jth_rightmost_child_words: {jth_rightmost_child_words}")
+        # print(f"jth_leftmost_child_labels: {jth_rightmost_child_labels}")
 
 
-# In[ ]:
+        if len(jth_rightmost_child_words) >= 1:
+            # for k in range (1,2):
+            k = 1
+            word_object = jth_rightmost_child_words[k-1]
+            word_features[k-1] = word_object.word_id
+            pos_features[k-1] = jth_rightmost_child_words[k-1].pos_id
+            label_features[k-1] = jth_rightmost_child_labels[k-1]
+
+            if len(jth_rightmost_child_words) >= 2:
+                k = 2
+                word_object = jth_rightmost_child_words[k-1]
+                word_features[k-1] = word_object.word_id
+                pos_features[k-1] = jth_rightmost_child_words[k-1].pos_id
+                label_features[k-1] = jth_rightmost_child_labels[k-1]
+
+    elif parser_config.stack.get_si(i) is None:
+        pass
+
+
+
+    return word_features, pos_features, label_features
+
+
+# In[58]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_rc1_rc2_features, i=1, to_print='incorrect', do_raise=True) # call with i=1
 
 
-# In[ ]:
+# In[59]:
 
 
 if __name__ == '__main__':
@@ -1353,8 +1457,46 @@ def get_llc_rrc_features(parser_config, i):
     word_features, pos_features, label_features = [parser_config.vocab.WORD_NULL]*2, [parser_config.vocab.POS_NULL]*2, [parser_config.vocab.LABEL_NULL]*2
 
     ### TODO ###
+        if parser_config.stack.get_si(i) is not None:
+
+        s_i = (parser_config.stack.get_si(i))
+
+        arc_list_sorted = get_rc(parser_config, s_i)
+        # print(f"arc_list_sorted: {arc_list_sorted}")
+
+
+        jth_leftmost_child_arcs = arc_list_sorted[:2]
+        # print(f"jth_leftmost_child_arcs: {jth_leftmost_child_arcs}")
+
+        jth_rightmost_child_words = [arc.dependent for arc in jth_leftmost_child_arcs]
+        jth_rightmost_child_labels = [arc.label_id for arc in jth_leftmost_child_arcs]
+
+        # print(f"jth_rightmost_child_words: {jth_rightmost_child_words}")
+        # print(f"jth_leftmost_child_labels: {jth_rightmost_child_labels}")
+
+
+        if len(jth_rightmost_child_words) >= 1:
+            # for k in range (1,2):
+            k = 1
+            word_object = jth_rightmost_child_words[k-1]
+            word_features[k-1] = word_object.word_id
+            pos_features[k-1] = jth_rightmost_child_words[k-1].pos_id
+            label_features[k-1] = jth_rightmost_child_labels[k-1]
+
+            if len(jth_rightmost_child_words) >= 2:
+                k = 2
+                word_object = jth_rightmost_child_words[k-1]
+                word_features[k-1] = word_object.word_id
+                pos_features[k-1] = jth_rightmost_child_words[k-1].pos_id
+                label_features[k-1] = jth_rightmost_child_labels[k-1]
+
+    elif parser_config.stack.get_si(i) is None:
+        pass
+
+
+
+    return word_features, pos_features, label_features
     
-    return None, None, None
 
 
 # In[ ]:
