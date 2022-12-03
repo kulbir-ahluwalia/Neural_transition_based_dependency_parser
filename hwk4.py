@@ -997,6 +997,8 @@ def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract 
         gold_action =  get_gold_action(stack, buffer, gold_dependencies)
         # print(f"gold_action outside none check: {gold_action}")
 
+
+        #Use is when you want to check against an object's identity (e.g. checking to see if var is None). Use == when you want to check equality
         if get_gold_action(stack, buffer, gold_dependencies) is None:
             # gold_action =  get_gold_action(stack, buffer, gold_dependencies)
             # print(f"gold_action in NONE check: {gold_action}")
@@ -1164,7 +1166,7 @@ if __name__ == '__main__':
 # 
 # <font color='green'><b>Hint:</b> Each of these functions can be written in as few as 1 line. If you find yourself using more than 5 lines, you are probably doing more work than you need to.</font>
 
-# In[47]:
+# In[91]:
 
 
 def get_lc(parser_config, word):
@@ -1175,18 +1177,41 @@ def get_lc(parser_config, word):
     '''
     ### TODO ###
 
+    # gold_dependencies.getArcToHead(s2).head
 
-    return None
+    # look at the dependencies
+    # print(f"parser_config.dependencies: {parser_config.dependencies}")
+
+    arc_list = []
+
+    for dependency in parser_config.dependencies:
+        if dependency.head.idx == word.idx:
+            if dependency.head.idx > dependency.dependent.idx:
+                arc_list.append(dependency)
+
+    # lambda arguments : expression
+    key_function = lambda arc: arc.dependent.idx
+
+    # alternate way
+    # def key_function(arc):
+    #     return arc.dependent.idx
+
+    arc_list_sorted = sorted(arc_list, key = key_function)
 
 
-# In[ ]:
+    # look at the first half of the sentence before the current word_idx
+
+    return arc_list_sorted
+
+
+# In[92]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_lc, to_print='incorrect', do_raise=True)
 
 
-# In[ ]:
+# In[97]:
 
 
 def get_rc(parser_config, word):
@@ -1197,10 +1222,33 @@ def get_rc(parser_config, word):
     '''
     ### TODO ###
 
-    return None
+    arc_list = []
+
+    for dependency in parser_config.dependencies:
+        if dependency.head.idx == word.idx:
+            if dependency.head.idx < dependency.dependent.idx:
+                arc_list.append(dependency)
+
+    # lambda arguments : expression
+    key_function = lambda arc: arc.dependent.idx
+
+    # alternate way
+    # def key_function(arc):
+    #     return arc.dependent.idx
+
+    arc_list_sorted = sorted(arc_list, key = key_function)
+
+    #Using reversed() we can reverse the list and a list_reverseiterator object is created, from which we can create a list using list() type casting. Or, we can also use list.reverse() function to reverse list in-place.
+    #or do slicing [::-1]. but a new copy is created. This exhausts more memory.
+    list_of_arcs_reversed = (arc_list_sorted[::-1])
+    # print(f"list_of_arcs_reversed: {list_of_arcs_reversed}")
+    # print(f"type of list_of_arcs_reversed: {type(list_of_arcs_reversed)}")
+
+    # return None
+    return list_of_arcs_reversed
 
 
-# In[ ]:
+# In[98]:
 
 
 if __name__ == '__main__':
