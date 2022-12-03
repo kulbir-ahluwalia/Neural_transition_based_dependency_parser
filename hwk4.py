@@ -711,8 +711,8 @@ class ParserConfiguration(object):
         Inputs:
             transition: str, "S", "LA-label", or "RA-label", where label is a valid label
         '''
-        print(f"self.vocab.tran2id : {self.vocab.tran2id}")
-        print(f"transition is: {transition}")
+        # print(f"self.vocab.tran2id : {self.vocab.tran2id}")
+        # print(f"transition is: {transition}")
 
         assert transition in self.vocab.tran2id
 
@@ -913,8 +913,8 @@ def get_gold_action(stack, buffer, gold_dependencies):
         # action = 'S'
         return action
 
-    else:
-        print(f"DID NOT go in any if condition")
+    # else:
+    #     print(f"DID NOT go in any if condition")
 
     
     return action
@@ -954,7 +954,7 @@ if __name__ == '__main__':
 # 
 # This function is worth <b>8 points</b>.
 
-# In[22]:
+# In[16]:
 
 
 def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract = lambda parser_config: []):
@@ -1014,7 +1014,7 @@ def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract 
 
 # We provide you with a sanity check for this function on the same test sentences we used above.
 
-# In[23]:
+# In[17]:
 
 
 if __name__ == '__main__':
@@ -1023,7 +1023,7 @@ if __name__ == '__main__':
 
 # The following function calls `generate_training_examples(...)` on every sentence in the dataset to create the full training data. You do <b>not</b> need to edit it.
 
-# In[ ]:
+# In[18]:
 
 
 ### DO NOT EDIT ###
@@ -1046,7 +1046,7 @@ def generate_all_training_examples(vocab, sentences, feat_extract = lambda parse
     return all_training_examples
 
 
-# In[ ]:
+# In[19]:
 
 
 ### DO NOT EDIT ###
@@ -1076,7 +1076,7 @@ if __name__ == '__main__':
 # 
 # Wherever a particular word does not exist (such as when the stack or buffer has length $< 3$) use the appropriate NULL token. This is necessary to ensure that our neural network will see an equally sized feature vector for each example.
 
-# In[ ]:
+# In[38]:
 
 
 def get_top3_stack_features(parser_config):
@@ -1087,21 +1087,44 @@ def get_top3_stack_features(parser_config):
         pos_features: List of POS ids for s1, s2, s3 (use vocab.POS_NULL if a word does not exist)
     '''
     word_features, pos_features = [parser_config.vocab.WORD_NULL]*3, [parser_config.vocab.POS_NULL]*3
+    # print(f"word_features before processing: {word_features}")
+    # print(f"pos_features before processing: {pos_features}")
 
     ### TODO ###
+    # test = parser_config.stack.get_si(1)
+    #
+    # print(f"test is {test.word_id}")
 
-    
-    return None, None
+    for i in range(1,4):
+        if parser_config.stack.get_si(i) is not None:
+            s_i = (parser_config.stack.get_si(i))
+            word_features[i-1] = s_i.word_id
+            pos_features[i-1] = s_i.pos_id
+        elif parser_config.stack.get_si(i) is None:
+            pass
+
+    # for a word:
+    # self.word = word
+    # self.pos = pos
+    # self.idx = idx
+    # self.word_id = word_id
+    # self.pos_id = pos_id
+
+    # print(f"word_features after processing: {word_features}")
+    # print(f"pos_features after processing: {pos_features}")
+    #
+    # return None, None
+    return word_features, pos_features
 
 
-# In[ ]:
+# In[39]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_top3_stack_features, to_print='incorrect', do_raise=True)
 
 
-# In[ ]:
+# In[45]:
 
 
 def get_top3_buffer_features(parser_config):
@@ -1114,11 +1137,19 @@ def get_top3_buffer_features(parser_config):
     word_features, pos_features = [parser_config.vocab.WORD_NULL]*3, [parser_config.vocab.POS_NULL]*3
 
     ### TODO ###
+    for i in range(1,4):
+        if parser_config.buffer.get_bi(i) is not None:
+            b_i = (parser_config.buffer.get_bi(i))
+            word_features[i-1] = b_i.word_id
+            pos_features[i-1] = b_i.pos_id
+        elif parser_config.buffer.get_bi(i) is None:
+            pass
+
     
-    return None, None
+    return word_features, pos_features
 
 
-# In[ ]:
+# In[46]:
 
 
 if __name__ == '__main__':
@@ -1133,7 +1164,7 @@ if __name__ == '__main__':
 # 
 # <font color='green'><b>Hint:</b> Each of these functions can be written in as few as 1 line. If you find yourself using more than 5 lines, you are probably doing more work than you need to.</font>
 
-# In[ ]:
+# In[47]:
 
 
 def get_lc(parser_config, word):
@@ -1143,6 +1174,7 @@ def get_lc(parser_config, word):
         A list of Arcs whose head is word, sorted by the indices of the dependent word from left to right.
     '''
     ### TODO ###
+
 
     return None
 
