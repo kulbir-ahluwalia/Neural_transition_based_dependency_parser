@@ -1862,21 +1862,21 @@ def train_model(model, vocab, train_data_loader, optimizer, n_epochs, device):
 
 if __name__ == "__main__":
     # HYPERPARAMETERS - Feel free to change
-    BATCH_SIZE = 1024
-    LEARNING_RATE = 0.01
-    N_EPOCHS = 10
-    HIDDEN_SIZE = 300
-    DROPOUT_PROB = 0.1
-    EMBED_SIZE = 100
-    WEIGHT_DECAY = 1e-8
-
     # BATCH_SIZE = 1024
-    # LEARNING_RATE = 0.03
-    # N_EPOCHS = 20
-    # HIDDEN_SIZE = 600
+    # LEARNING_RATE = 0.01
+    # N_EPOCHS = 10
+    # HIDDEN_SIZE = 300
     # DROPOUT_PROB = 0.1
-    # EMBED_SIZE = 200
+    # EMBED_SIZE = 100
     # WEIGHT_DECAY = 1e-8
+
+    BATCH_SIZE = 1024
+    LEARNING_RATE = 0.03
+    N_EPOCHS = 20
+    HIDDEN_SIZE = 600
+    DROPOUT_PROB = 0.1
+    EMBED_SIZE = 200
+    WEIGHT_DECAY = 1e-8
 
     N_EMBEDDINGS = vocab.n_tokens # Do not change!
     N_FEATURES = 48 # Do not change!
@@ -1920,7 +1920,7 @@ if __name__=='__main__':
 # 
 # This function is worth <b>8 points</b>, and there is no partial credit.
 
-# In[74]:
+# In[48]:
 
 
 def select_best_legal_action(parser_configs, predictions, n_labels):
@@ -2103,7 +2103,7 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
 
 # Now we provide you with a function that takes a (trained) model and makes the best legal prediction for a batch of parser configurations. You do <b>not</b> need to edit this cell.
 
-# In[75]:
+# In[49]:
 
 
 ### DO NOT EDIT ###
@@ -2135,7 +2135,7 @@ def predict(model, vocab, parser_configs):
 # 
 # You do <b>not</b> need to edit this cell.
 
-# In[76]:
+# In[50]:
 
 
 ### DO NOT EDIT ###
@@ -2223,7 +2223,7 @@ def evaluate(model, vocab, dataset, eval_batch_size=5000):
 
 # Run the following cell to calculate your attachment scores. You must achieve a <b>labeled attachment score</b> of <b>≥ 80%</b> for full credit. Bear in mind that Gradescope uses a different (hidden) test set, so results may be slightly different.
 
-# In[77]:
+# In[51]:
 
 
 ### DO NOT EDIT ###
@@ -2243,7 +2243,7 @@ if __name__=="__main__":
 # * ⍻: Edges for which you predicted the <b>correct head but incorrect label</b>
 # * ×: Edges that you do not have in your tree (i.e., you predicted the <b>incorrect head<b>).
 
-# In[60]:
+# In[52]:
 
 
 ### DO NOT EDIT ###
@@ -2283,7 +2283,7 @@ def diagnose_sentences(idxes, data, preds, min_len, max_len, num_to_print=5):
         print('-'*100, '\n')
 
 
-# In[61]:
+# In[53]:
 
 
 if __name__== '__main__':
@@ -2302,7 +2302,7 @@ if __name__== '__main__':
 # 1.   `hwk4.py`, the download of this notebook as a `.py` file (**not** a `.ipynb` file)
 # 1.   `model.pt`, the saved version of your `model`
 
-# In[ ]:
+# In[54]:
 
 
 ### DO NOT EDIT ###
@@ -2319,13 +2319,13 @@ if __name__=='__main__':
     print("Saved!")
 
 
-# In[ ]:
+# In[54]:
 
 
 
 
 
-# In[ ]:
+# In[54]:
 
 
 
