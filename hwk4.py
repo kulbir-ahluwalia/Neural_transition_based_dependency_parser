@@ -1862,21 +1862,21 @@ def train_model(model, vocab, train_data_loader, optimizer, n_epochs, device):
 
 if __name__ == "__main__":
     # HYPERPARAMETERS - Feel free to change
+    # BATCH_SIZE = 1024
+    # LEARNING_RATE = 0.01
+    # N_EPOCHS = 10
+    # HIDDEN_SIZE = 300
+    # DROPOUT_PROB = 0.1
+    # EMBED_SIZE = 100
+    # WEIGHT_DECAY = 1e-8
+
     BATCH_SIZE = 1024
     LEARNING_RATE = 0.01
-    N_EPOCHS = 10
-    HIDDEN_SIZE = 300
-    DROPOUT_PROB = 0.1
-    EMBED_SIZE = 100
+    N_EPOCHS = 30
+    HIDDEN_SIZE = 800
+    DROPOUT_PROB = 0.2
+    EMBED_SIZE = 400
     WEIGHT_DECAY = 1e-8
-
-    # BATCH_SIZE = 1024
-    # LEARNING_RATE = 0.03
-    # N_EPOCHS = 20
-    # HIDDEN_SIZE = 600
-    # DROPOUT_PROB = 0.1
-    # EMBED_SIZE = 200
-    # WEIGHT_DECAY = 1e-8
 
     N_EMBEDDINGS = vocab.n_tokens # Do not change!
     N_FEATURES = 48 # Do not change!
@@ -1920,7 +1920,7 @@ if __name__=='__main__':
 # 
 # This function is worth <b>8 points</b>, and there is no partial credit.
 
-# In[55]:
+# In[48]:
 
 
 def select_best_legal_action(parser_configs, predictions, n_labels):
@@ -1935,10 +1935,23 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
     '''
     # preds = np.argmax(predictions, axis = 1) # Change this! This selects the highest probability action, regardless of legality.
 
-    ### TODO ###
-    # print(f"parser_configs: {parser_configs}")
-    # print(f"parser_configs list len: {len(parser_configs)}")
-    parser_configs_len = len(parser_configs)
+
+    # The first n_labels indices [0,...,n_labels-1] correspond to the various LA-label actions
+        # The second n_labels indices [n_labels,...,2n_labels-1] correspond to the RA-label actions.
+        # The very last index 2n_labels corresponds to the S action.
+
+        # for each row of predictions, we need to find 1 best possible action among LA-label actions [0,...,n_labels-1] , RA-label actions and Shift action
+        # each parser config is the config after an action, every parser config corresponds to a row of preds probabilities. We just need to find the legal action.
+
+
+        # BITMAP
+        # Lets say for Row 1  , LA action is legal then all RA-labels and shift label t should be 0 in bitmap and we select the LA action label with max probability
+        # for each row of the array you will find one best action
+        # For LA-label if the action is legal, you will set your bit_map to bit_map[0:n_labels-1] = 1. Once you’re done with the entire array, then you can multiply the bit_map array to the individual prediction row in the  predictions array. Then select the max from the predictions array once you’re done masking the entire predictions array.
+        # RA (set  [n_labels:2*n_labels-1] )and S (set [2*n_labels])
+        # just multiply bitmap by the pred row and take the argmax of all predictions over axis=1
+
+
 
     # parser_configs: [<__main__.ParserConfiguration object at 0x7f54dcb02520>, <__main__.ParserConfiguration object at 0x7f54dcc49400>, <__main__.ParserConfiguration object at 0x7f54dea25f70>, <__main__.ParserConfiguration object at 0x7f54dcc65d00>, <__main__.ParserConfiguration object at 0x7f54dccb0460>, <__main__.ParserConfiguration object at 0x7f54dc80b5e0>,
 
@@ -1993,9 +2006,10 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
     #
     #         pass
 
-    bitmap_np_array = np.zeros((parser_configs_len, 2*n_labels + 1))
-    # print(f"bitmap_np_array shape before for loops: {bitmap_np_array.shape}")
-
+    ### TODO ###
+    # print(f"parser_configs: {parser_configs}")
+    # print(f"parser_configs list len: {len(parser_configs)}")
+    parser_configs_len = len(parser_configs)
 
 
     # parser_configs: list of parser configurations of length N = 1765
@@ -2040,7 +2054,10 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
 
 
         # predictions[index] = predictions[index] + (bitmap_1D_np_array*100)
-        predictions[index] *= bitmap_1D_np_array
+        predictions[index] = predictions[index] * bitmap_1D_np_array
+
+        # bitmap_np_array = np.zeros((parser_configs_len, 2*n_labels + 1))
+        # print(f"bitmap_np_array shape before for loops: {bitmap_np_array.shape}")
 
         # #############################################
         # # with 2D bitmap
@@ -2084,31 +2101,13 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
 
 
 
-        # if len
-        #     legal_action =
-
-        # The first n_labels indices [0,...,n_labels-1] correspond to the various LA-label actions
-        # The second n_labels indices [n_labels,...,2n_labels-1] correspond to the RA-label actions.
-        # The very last index 2n_labels corresponds to the S action.
-
-        # for each row of predictions, we need to find 1 best possible action among LA-label actions [0,...,n_labels-1] , RA-label actions and Shift action
-        # each parser config is the config after an action, every parser config corresponds to a row of preds probabilities. We just need to find the legal action.
-
-
-        # BITMAP
-        # Lets say for Row 1  , LA action is legal then all RA-labels and shift label t should be 0 in bitmap and we select the LA action label with max probability
-        # for each row of the array you will find one best action
-        # For LA-label if the action is legal, you will set your bit_map to bit_map[0:n_labels-1] = 1. Once you’re done with the entire array, then you can multiply the bit_map array to the individual prediction row in the  predictions array. Then select the max from the predictions array once you’re done masking the entire predictions array.
-        # RA (set  [n_labels:2*n_labels-1] )and S (set [2*n_labels])
-        # just multiply bitmap by the pred row and take the argmax of all predictions over axis=1
-
 
     return argmax_for_index
 
 
 # Now we provide you with a function that takes a (trained) model and makes the best legal prediction for a batch of parser configurations. You do <b>not</b> need to edit this cell.
 
-# In[56]:
+# In[49]:
 
 
 ### DO NOT EDIT ###
@@ -2140,7 +2139,7 @@ def predict(model, vocab, parser_configs):
 # 
 # You do <b>not</b> need to edit this cell.
 
-# In[57]:
+# In[50]:
 
 
 ### DO NOT EDIT ###
@@ -2228,7 +2227,7 @@ def evaluate(model, vocab, dataset, eval_batch_size=5000):
 
 # Run the following cell to calculate your attachment scores. You must achieve a <b>labeled attachment score</b> of <b>≥ 80%</b> for full credit. Bear in mind that Gradescope uses a different (hidden) test set, so results may be slightly different.
 
-# In[58]:
+# In[51]:
 
 
 ### DO NOT EDIT ###
@@ -2248,7 +2247,7 @@ if __name__=="__main__":
 # * ⍻: Edges for which you predicted the <b>correct head but incorrect label</b>
 # * ×: Edges that you do not have in your tree (i.e., you predicted the <b>incorrect head<b>).
 
-# In[59]:
+# In[52]:
 
 
 ### DO NOT EDIT ###
@@ -2288,7 +2287,7 @@ def diagnose_sentences(idxes, data, preds, min_len, max_len, num_to_print=5):
         print('-'*100, '\n')
 
 
-# In[60]:
+# In[53]:
 
 
 if __name__== '__main__':
@@ -2307,7 +2306,7 @@ if __name__== '__main__':
 # 1.   `hwk4.py`, the download of this notebook as a `.py` file (**not** a `.ipynb` file)
 # 1.   `model.pt`, the saved version of your `model`
 
-# In[61]:
+# In[54]:
 
 
 ### DO NOT EDIT ###
@@ -2324,25 +2323,25 @@ if __name__=='__main__':
     print("Saved!")
 
 
-# In[61]:
+# In[54]:
 
 
 
 
 
-# In[61]:
+# In[54]:
 
 
 
 
 
-# In[ ]:
+# In[54]:
 
 
 
 
 
-# In[61]:
+# In[54]:
 
 
 
