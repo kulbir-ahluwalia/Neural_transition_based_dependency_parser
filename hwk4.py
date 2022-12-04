@@ -1869,6 +1869,15 @@ if __name__ == "__main__":
     DROPOUT_PROB = 0.1
     EMBED_SIZE = 100
     WEIGHT_DECAY = 1e-8
+
+    # BATCH_SIZE = 1024
+    # LEARNING_RATE = 0.03
+    # N_EPOCHS = 20
+    # HIDDEN_SIZE = 600
+    # DROPOUT_PROB = 0.1
+    # EMBED_SIZE = 200
+    # WEIGHT_DECAY = 1e-8
+
     N_EMBEDDINGS = vocab.n_tokens # Do not change!
     N_FEATURES = 48 # Do not change!
     N_CLASSES = vocab.n_trans # Do not change!
@@ -1911,7 +1920,7 @@ if __name__=='__main__':
 # 
 # This function is worth <b>8 points</b>, and there is no partial credit.
 
-# In[62]:
+# In[171]:
 
 
 def select_best_legal_action(parser_configs, predictions, n_labels):
@@ -1924,7 +1933,7 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
     Returns:
         preds: np.array of length N, containing the indices of the highest probability legal action for each example
     '''
-    preds = np.argmax(predictions, axis = 1) # Change this! This selects the highest probability action, regardless of legality.
+    # preds = np.argmax(predictions, axis = 1) # Change this! This selects the highest probability action, regardless of legality.
 
     ### TODO ###
     # print(f"parser_configs: {parser_configs}")
@@ -1940,7 +1949,7 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
     # n_labels: 47    # we have to predict the label?
     # print(f"n_labels: {n_labels}\n")
 
-    bitmap_np_array = np.zeros((parser_configs_len, 2*n_labels + 1))
+
 
     # parser_configs list len: 1765
     # predictions: [[ -7.9638505   -4.9023805   -1.7691197  ...   5.3745494    0.02722144
@@ -1984,40 +1993,88 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
     #
     #         pass
 
+    bitmap_np_array = np.zeros((parser_configs_len, 2*n_labels + 1))
+    # print(f"bitmap_np_array shape before for loops: {bitmap_np_array.shape}")
+
+
+
     # parser_configs: list of parser configurations of length N = 1765
     for index, parser_config in enumerate(parser_configs):
         parser_config_probs = predictions[index]
+        bitmap_1D_np_array = np.zeros((2*n_labels + 1))
         # print(f"probs of index {index} are: {parser_config_probs}")
 
         stack = parser_config.stack
         buffer = parser_config.buffer
         dependencies = parser_config.dependencies
+        # print(f"dependecies are: {dependencies}")
 
-         # the conditions related to LA, RA and S must be independent
-        if len(buffer) >= 1:
-            # print(f"buffer is a valid action for this parser config")
+        # print(f"index is: {index}")
+        # print(f"stack len is: {len(stack)}")
+        # print(f"buffer len is: {len(buffer)}")
+
+        # # S
+        # if len(buffer) > 0 :
+        #     # print(f"S is a valid action for this parser config")
+        #     bitmap_1D_np_array[2*n_labels] = 1
+        #     # bitmap_1D_np_array[:2*n_labels] = 0
+        #
+        # # RA
+        # if (len(buffer) > 0 and len(stack) >= 2) or (len(buffer) == 0 and len(stack) == 2):
+        # # if (len(stack) >= 2):
+        #     # print(f"RA-label is a valid action for this parser config")
+        #     # bitmap_1D_np_array[0:n_labels] = 0
+        #     bitmap_1D_np_array[n_labels:2*n_labels] = 1
+        #     # bitmap_1D_np_array[2*n_labels] = 0
+        #
+        #
+        # # LA
+        # if (len(buffer) > 0 and len(stack) >= 3) or (len(buffer) == 0 and len(stack) == 2):
+        # # if (len(stack) >= 3):
+        #     # print(f"LA-label is a valid action for this parser config")
+        #     bitmap_1D_np_array[0:n_labels] = 1
+        #     bitmap_1D_np_array[n_labels:] = 0
+        #
+        # predictions[index] = predictions[index] + (bitmap_1D_np_array*100)
+
+        #############################################
+        # with 2D bitmap
+        # S
+        if len(buffer) > 0 :
+            # print(f"S is a valid action for this parser config")
             bitmap_np_array[index, 2*n_labels] = 1
-            bitmap_np_array[index, :2*n_labels] = 0
+            # bitmap_np_array[index, :2*n_labels] = 0
 
-        if len(stack) >= 2:
+        # RA
+        if (len(buffer) > 0 and len(stack) >= 2) or (len(buffer) == 0 and len(stack) == 2):
+        # if (len(stack) >= 2):
             # print(f"RA-label is a valid action for this parser config")
-            bitmap_np_array[index, 0:n_labels] = 1
-            bitmap_np_array[index, n_labels:] = 0
-
-        if len(stack) >= 3:
-            # print(f"LA-label is a valid action for this parser config")
-            bitmap_np_array[index, 0:n_labels] = 0
+            # bitmap_np_array[index, 0:n_labels] = 0
             bitmap_np_array[index, n_labels:2*n_labels] = 1
-            bitmap_np_array[index, 2*n_labels] = 0
+            # bitmap_np_array[index, 2*n_labels] = 0
 
-        # print(f"bitmap_np_array: {bitmap_np_array}")
-        # print(f"bitmap_np_array.shape: {bitmap_np_array.shape}")
 
-    valid_action_probs = predictions + (bitmap_np_array*100)
+        # LA
+        if (len(buffer) > 0 and len(stack) >= 3) or (len(buffer) == 0 and len(stack) == 2):
+        # if (len(stack) >= 3):
+            # print(f"LA-label is a valid action for this parser config")
+            bitmap_np_array[index, 0:n_labels] = 1
+            # bitmap_np_array[index, n_labels:] = 0
+
+    # print(f"bitmap_np_array: {bitmap_np_array}")
+    # print(f"bitmap_np_array.shape after for loop: {bitmap_np_array.shape}")
+
+    # parser_config_probs = bitmap_1D_np_array
+    valid_action_probs = predictions + (bitmap_np_array*1000)
+
+    # valid_action_probs = predictions
     # print(f"valid_action_probs: {valid_action_probs}")
     # print(f"valid_action_probs.shape: {valid_action_probs.shape}")
 
-    preds = np.argmax(valid_action_probs, axis = 1)
+    argmax_for_index = np.argmax(valid_action_probs, axis = 1)
+    # print(f"argmax_for_index: {argmax_for_index}")
+    # print(f"argmax_for_index.shape: {argmax_for_index.shape}\n\n")
+    # print(f"######################################## select_best_legal_action FUNCTION COMPLETED #################################")
 
 
 
@@ -2041,12 +2098,12 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
         # just multiply bitmap by the pred row and take the argmax of all predictions over axis=1
 
 
-    return preds
+    return argmax_for_index
 
 
 # Now we provide you with a function that takes a (trained) model and makes the best legal prediction for a batch of parser configurations. You do <b>not</b> need to edit this cell.
 
-# In[63]:
+# In[172]:
 
 
 ### DO NOT EDIT ###
@@ -2065,6 +2122,9 @@ def predict(model, vocab, parser_configs):
 
     pred = pred.detach().cpu().numpy()
     pred = select_best_legal_action(parser_configs, pred, vocab.n_labels)
+
+    #########################################
+    # print(f"pred is: {pred}")
     actions = [vocab.id2tran[p] for p in pred]
     return actions
 
@@ -2075,7 +2135,7 @@ def predict(model, vocab, parser_configs):
 # 
 # You do <b>not</b> need to edit this cell.
 
-# In[64]:
+# In[173]:
 
 
 ### DO NOT EDIT ###
@@ -2127,6 +2187,9 @@ def evaluate(model, vocab, dataset, eval_batch_size=5000):
     sentences = [x[0] for x in dataset]
     gold_dependencies = [x[1] for x in dataset]
     pred_dependencies = run_inference(sentences, model, vocab, eval_batch_size)
+
+    # print(f"pred_dependencies: {pred_dependencies}")
+    print(f"pred_dependencies len: {len(pred_dependencies)}")
     
     UAS, LAS = 0.0, 0.0
 
@@ -2140,6 +2203,13 @@ def evaluate(model, vocab, dataset, eval_batch_size=5000):
         
         # Get predictions
         pred_head, pred_label = transform_to_head_label(pred_dependencies[i])
+
+        # print(f"pred_head: {pred_head}")
+        # print(f"pred_head len: {len(pred_head)}")
+        #
+        # print(f"pred_label: {pred_label}")
+        # print(f"pred_label len: {len(pred_label)}")
+
         
         assert len(gold_head) == len(pred_head) and len(gold_label) == len(pred_label)
         assert -1 not in gold_head + gold_label + pred_head + pred_label
@@ -2153,7 +2223,7 @@ def evaluate(model, vocab, dataset, eval_batch_size=5000):
 
 # Run the following cell to calculate your attachment scores. You must achieve a <b>labeled attachment score</b> of <b>≥ 80%</b> for full credit. Bear in mind that Gradescope uses a different (hidden) test set, so results may be slightly different.
 
-# In[65]:
+# In[174]:
 
 
 ### DO NOT EDIT ###
@@ -2173,7 +2243,7 @@ if __name__=="__main__":
 # * ⍻: Edges for which you predicted the <b>correct head but incorrect label</b>
 # * ×: Edges that you do not have in your tree (i.e., you predicted the <b>incorrect head<b>).
 
-# In[66]:
+# In[175]:
 
 
 ### DO NOT EDIT ###
@@ -2213,7 +2283,7 @@ def diagnose_sentences(idxes, data, preds, min_len, max_len, num_to_print=5):
         print('-'*100, '\n')
 
 
-# In[67]:
+# In[176]:
 
 
 if __name__== '__main__':
@@ -2232,7 +2302,7 @@ if __name__== '__main__':
 # 1.   `hwk4.py`, the download of this notebook as a `.py` file (**not** a `.ipynb` file)
 # 1.   `model.pt`, the saved version of your `model`
 
-# In[68]:
+# In[177]:
 
 
 ### DO NOT EDIT ###
@@ -2249,13 +2319,13 @@ if __name__=='__main__':
     print("Saved!")
 
 
-# In[68]:
+# In[54]:
 
 
 
 
 
-# In[61]:
+# In[54]:
 
 
 
