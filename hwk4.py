@@ -1920,7 +1920,7 @@ if __name__=='__main__':
 # 
 # This function is worth <b>8 points</b>, and there is no partial credit.
 
-# In[48]:
+# In[81]:
 
 
 def select_best_legal_action(parser_configs, predictions, n_labels):
@@ -2020,18 +2020,20 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
             # bitmap_1D_np_array[:2*n_labels] = 0
 
         # RA
-        # if (len(buffer) > 0 and len(stack) >= 2) or (len(buffer) == 0 and len(stack) == 2):
+        # if (len(stack) >= 3) or (len(buffer) == 0 and len(stack) == 2):
         if len(stack) >= 2:
             # print(f"RA-label is a valid action for this parser config")
             # bitmap_1D_np_array[0:n_labels] = 0
+            # bitmap_1D_np_array[n_labels:2*n_labels-1] = 1
             bitmap_1D_np_array[n_labels:2*n_labels] = 1
             # bitmap_1D_np_array[2*n_labels] = 0
 
 
         # LA
-        # if (len(buffer) > 0 and len(stack) >= 3) or (len(buffer) == 0 and len(stack) == 2):
+        # if (len(stack) >= 3) or (len(buffer) == 0 and len(stack) == 2):
         if len(stack) >= 3:
             # print(f"LA-label is a valid action for this parser config")
+            # bitmap_1D_np_array[0:n_labels-1] = 1
             bitmap_1D_np_array[0:n_labels] = 1
             # bitmap_1D_np_array[n_labels:] = 0
 
@@ -2103,7 +2105,7 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
 
 # Now we provide you with a function that takes a (trained) model and makes the best legal prediction for a batch of parser configurations. You do <b>not</b> need to edit this cell.
 
-# In[49]:
+# In[82]:
 
 
 ### DO NOT EDIT ###
@@ -2135,7 +2137,7 @@ def predict(model, vocab, parser_configs):
 # 
 # You do <b>not</b> need to edit this cell.
 
-# In[50]:
+# In[88]:
 
 
 ### DO NOT EDIT ###
@@ -2223,7 +2225,7 @@ def evaluate(model, vocab, dataset, eval_batch_size=5000):
 
 # Run the following cell to calculate your attachment scores. You must achieve a <b>labeled attachment score</b> of <b>≥ 80%</b> for full credit. Bear in mind that Gradescope uses a different (hidden) test set, so results may be slightly different.
 
-# In[51]:
+# In[89]:
 
 
 ### DO NOT EDIT ###
@@ -2243,7 +2245,7 @@ if __name__=="__main__":
 # * ⍻: Edges for which you predicted the <b>correct head but incorrect label</b>
 # * ×: Edges that you do not have in your tree (i.e., you predicted the <b>incorrect head<b>).
 
-# In[52]:
+# In[90]:
 
 
 ### DO NOT EDIT ###
@@ -2283,7 +2285,7 @@ def diagnose_sentences(idxes, data, preds, min_len, max_len, num_to_print=5):
         print('-'*100, '\n')
 
 
-# In[53]:
+# In[91]:
 
 
 if __name__== '__main__':
@@ -2302,7 +2304,7 @@ if __name__== '__main__':
 # 1.   `hwk4.py`, the download of this notebook as a `.py` file (**not** a `.ipynb` file)
 # 1.   `model.pt`, the saved version of your `model`
 
-# In[54]:
+# In[92]:
 
 
 ### DO NOT EDIT ###
@@ -2319,13 +2321,13 @@ if __name__=='__main__':
     print("Saved!")
 
 
-# In[54]:
+# In[92]:
 
 
 
 
 
-# In[54]:
+# In[ ]:
 
 
 
