@@ -14,7 +14,7 @@
 # 
 # The following cells set up the tests that you can use in the notebook. You should <b>not</b> edit any of these cells.
 
-# In[ ]:
+# In[1]:
 
 
 ### DO NOT EDIT ###
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     testing_bundle = cp.load(urlopen("https://drive.google.com/uc?export=download&id=1-9lWbXuXZYGjJWQRKD7um_83O-I3ER63"))
 
 
-# In[ ]:
+# In[2]:
 
 
 ### DO NOT EDIT ###
@@ -246,7 +246,7 @@ def sanityCheckModel(all_test_params, model, expected_outputs, init_or_forward, 
 # 
 # 
 
-# In[ ]:
+# In[3]:
 
 
 ### DO NOT EDIT ###
@@ -265,7 +265,7 @@ import random
 # 
 # Run the following cells to load the data and see the number of sentences. You do <b>not</b> need to edit these cells.
 
-# In[ ]:
+# In[4]:
 
 
 ### DO NOT EDIT ###
@@ -276,7 +276,7 @@ def load_data():
     return train_set, test_set
 
 
-# In[ ]:
+# In[5]:
 
 
 ### DO NOT EDIT ###
@@ -289,7 +289,7 @@ if __name__ == '__main__':
 
 # Next, we visualize the training data, which contains labeled dependency trees. At test time, our goal will be to predict the dependency arcs & labels for a given sentence.
 
-# In[ ]:
+# In[6]:
 
 
 ### DO NOT EDIT ###
@@ -310,7 +310,7 @@ def display_sentence(sent):
     displacy.render(res, style="dep", manual=True, jupyter=True, options={'distance': 70})
 
 
-# In[ ]:
+# In[7]:
 
 
 if __name__ == '__main__':
@@ -325,7 +325,7 @@ if __name__ == '__main__':
 # 
 # You do <b>not</b> need to edit this cell.
 
-# In[ ]:
+# In[8]:
 
 
 ### DO NOT EDIT ###
@@ -415,7 +415,7 @@ class Vocabulary(object):
 
 # Run the following cell to see some stats from the vocabulary.
 
-# In[ ]:
+# In[9]:
 
 
 ### DO NOT EDIT ###
@@ -431,7 +431,7 @@ if __name__ == '__main__':
 # 
 # First, we define some data classes that you will find useful. You will be working with these a lot, so you should understand the data they contain as well as their methods. You do <b>not</b> need to edit this cell.
 
-# In[ ]:
+# In[10]:
 
 
 ### DO NOT EDIT ###
@@ -525,7 +525,7 @@ class Dependencies(object):
 # 
 # Here, we provide you with the outline of stack and buffer data structures. Your task is to implement the `push(...)` and `pop(...)` methods of the `Stack`, and the `pop(...)` method of the `Buffer`. Each method is worth <b>2 points</b>.
 
-# In[ ]:
+# In[11]:
 
 
 class Stack(object):
@@ -638,7 +638,7 @@ class Buffer(object):
 
 # The code below runs a sanity check for your `Stack` and `Buffer` classes. The tests are similar to the hidden ones in Gradescope. However, note that passing the sanity check does <b>not</b> guarantee that you will pass the autograder; it is intended to help you debug.
 
-# In[ ]:
+# In[12]:
 
 
 if __name__ == '__main__':
@@ -656,7 +656,7 @@ if __name__ == '__main__':
 # 
 # <font color='green'><b>Hint:</b> Use your `push(...)` and `pop(...)` operations here, and look at the methods of the `Dependencies` class to see how to add an arc to it.</font>
 
-# In[ ]:
+# In[13]:
 
 
 class ParserConfiguration(object):
@@ -793,7 +793,7 @@ class ParserConfiguration(object):
 # 
 # <font color='green'><b>Hint:</b> To get the $i$th word on the stack or buffer, call `stack.get_si(i)` or `buffer.get_bi(i)`. To find the head of a word `w`, call `gold_dependencies.getArcToHead(w)`.</font>
 
-# In[ ]:
+# In[14]:
 
 
 def get_gold_action(stack, buffer, gold_dependencies):
@@ -931,13 +931,13 @@ def get_gold_action(stack, buffer, gold_dependencies):
 # 
 # Note that Gradescope uses a set of different (hidden) tests, so you will want to fully test your code here.
 
-# In[ ]:
+# In[14]:
 
 
 
 
 
-# In[ ]:
+# In[15]:
 
 
 if __name__ == '__main__':
@@ -954,7 +954,7 @@ if __name__ == '__main__':
 # 
 # This function is worth <b>8 points</b>.
 
-# In[ ]:
+# In[16]:
 
 
 def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract = lambda parser_config: []):
@@ -1016,7 +1016,7 @@ def generate_training_examples(sentence, gold_dependencies, vocab, feat_extract 
 
 # We provide you with a sanity check for this function on the same test sentences we used above.
 
-# In[ ]:
+# In[17]:
 
 
 if __name__ == '__main__':
@@ -1025,7 +1025,7 @@ if __name__ == '__main__':
 
 # The following function calls `generate_training_examples(...)` on every sentence in the dataset to create the full training data. You do <b>not</b> need to edit it.
 
-# In[ ]:
+# In[18]:
 
 
 ### DO NOT EDIT ###
@@ -1048,7 +1048,7 @@ def generate_all_training_examples(vocab, sentences, feat_extract = lambda parse
     return all_training_examples
 
 
-# In[ ]:
+# In[19]:
 
 
 ### DO NOT EDIT ###
@@ -1078,7 +1078,7 @@ if __name__ == '__main__':
 # 
 # Wherever a particular word does not exist (such as when the stack or buffer has length $< 3$) use the appropriate NULL token. This is necessary to ensure that our neural network will see an equally sized feature vector for each example.
 
-# In[ ]:
+# In[20]:
 
 
 def get_top3_stack_features(parser_config):
@@ -1119,14 +1119,14 @@ def get_top3_stack_features(parser_config):
     return word_features, pos_features
 
 
-# In[ ]:
+# In[21]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_top3_stack_features, to_print='incorrect', do_raise=True)
 
 
-# In[ ]:
+# In[22]:
 
 
 def get_top3_buffer_features(parser_config):
@@ -1151,7 +1151,7 @@ def get_top3_buffer_features(parser_config):
     return word_features, pos_features
 
 
-# In[ ]:
+# In[23]:
 
 
 if __name__ == '__main__':
@@ -1166,7 +1166,7 @@ if __name__ == '__main__':
 # 
 # <font color='green'><b>Hint:</b> Each of these functions can be written in as few as 1 line. If you find yourself using more than 5 lines, you are probably doing more work than you need to.</font>
 
-# In[ ]:
+# In[24]:
 
 
 def get_lc(parser_config, word):
@@ -1204,14 +1204,14 @@ def get_lc(parser_config, word):
     return arc_list_sorted
 
 
-# In[ ]:
+# In[25]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_lc, to_print='incorrect', do_raise=True)
 
 
-# In[ ]:
+# In[26]:
 
 
 def get_rc(parser_config, word):
@@ -1248,7 +1248,7 @@ def get_rc(parser_config, word):
     return list_of_arcs_reversed
 
 
-# In[ ]:
+# In[27]:
 
 
 if __name__ == '__main__':
@@ -1260,7 +1260,7 @@ if __name__ == '__main__':
 # 
 # We will call this function with `i=1` and `i=2`, accounting for the words $lc_1(s_1)$, $lc_2(s_1)$, $lc_1(s_2)$, $lc_2(s_2)$.
 
-# In[ ]:
+# In[28]:
 
 
 def get_lc1_lc2_features(parser_config, i):
@@ -1348,14 +1348,14 @@ def get_lc1_lc2_features(parser_config, i):
     return word_features, pos_features, label_features
 
 
-# In[ ]:
+# In[29]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_lc1_lc2_features, i=1, to_print='incorrect', do_raise=True) # call with i=1
 
 
-# In[ ]:
+# In[30]:
 
 
 if __name__ == '__main__':
@@ -1367,7 +1367,7 @@ if __name__ == '__main__':
 # 
 # We will call this function with `i=1` and `i=2`, accounting for the words $rc_1(s_1)$, $rc_2(s_1)$, $rc_1(s_2)$, $rc_2(s_2)$.
 
-# In[ ]:
+# In[31]:
 
 
 def get_rc1_rc2_features(parser_config, i):
@@ -1423,14 +1423,14 @@ def get_rc1_rc2_features(parser_config, i):
     return word_features, pos_features, label_features
 
 
-# In[ ]:
+# In[32]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_rc1_rc2_features, i=1, to_print='incorrect', do_raise=True) # call with i=1
 
 
-# In[ ]:
+# In[33]:
 
 
 if __name__ == '__main__':
@@ -1442,7 +1442,7 @@ if __name__ == '__main__':
 # 
 # We will call this function with `i=1` and `i=2`, accounting for the words $lc_1(lc_1(s_1))$, $lc_1(lc_1(s_2))$, $rc_1(rc_1(s_1))$, $rc_1(rc_1(s_2))$.
 
-# In[ ]:
+# In[34]:
 
 
 def get_llc_rrc_features(parser_config, i):
@@ -1534,14 +1534,14 @@ def get_llc_rrc_features(parser_config, i):
     
 
 
-# In[ ]:
+# In[35]:
 
 
 if __name__ == '__main__':
     sanityCheck(get_llc_rrc_features, i=1, to_print='incorrect', do_raise=True) # call with i=1
 
 
-# In[ ]:
+# In[36]:
 
 
 if __name__ == '__main__':
@@ -1550,7 +1550,7 @@ if __name__ == '__main__':
 
 # We provide you with a function `extract_features(parser_config)` that calls each of these functions and returns a list of the 48 total features. You do <b>not</b> need to edit this function.
 
-# In[ ]:
+# In[89]:
 
 
 ### DO NOT EDIT ###
@@ -1593,13 +1593,22 @@ def extract_features(parser_config): # for both train & inference
 
 
     features = word_features + pos_features + label_features
+
+    ######################################################################################
+    # comment it out later
+    # print(f"features: {features}")
+    # print(f"len of features list: {len(features)}")
+    # features: [43, 63, 53, 36, 71, 71, 54, 62, 49, 62, 71, 71, 34, 59, 71, 71, 71, 71, 23, 23, 23, 17, 32, 32, 21, 19, 21, 19, 32, 32, 16, 24, 32, 32, 32, 32, 3, 4, 3, 4, 15, 15, 14, 11, 15, 15, 15, 15]
+    # len of features list: 48
+
+
     assert len(features) == 48
     return features
 
 
 # Run the following cell as a sanity check for `generate_training_examples(..., feat_extract=extract_features)` (i.e., to make sure that you can generate training examples with the correct feature extraction function).
 
-# In[ ]:
+# In[90]:
 
 
 if __name__ == '__main__':
@@ -1610,7 +1619,7 @@ if __name__ == '__main__':
 # 
 # Now we can go ahead and define our Pytorch `Dataset` class as well as our model.
 
-# In[ ]:
+# In[91]:
 
 
 ### DO NOT EDIT ###
@@ -1624,7 +1633,7 @@ import torch.nn.functional as F
 # 
 # As in previous homeworks, we create a Pytorch `Dataset`, which we will use to feed our training data to the model. You do <b>not</b> need to edit this cell.
 
-# In[ ]:
+# In[92]:
 
 
 ### DO NOT EDIT ###
@@ -1645,7 +1654,7 @@ class TrainDataset(torch.utils.data.Dataset):
 # 
 # Here you will write the `__init(...)__` and `forward(...)` methods of a feed-forward network, each of which is worth <b>8 points</b>. Your network should have an embedding layer, a single hidden layer, and an output layer. The `forward(...)` method will take in the features you have extracted from the parser configuration and predict the next parser action.
 
-# In[ ]:
+# In[93]:
 
 
 class Model(nn.Module):
@@ -1667,8 +1676,20 @@ class Model(nn.Module):
         # Initialize a linear layer that maps the (concatenated) embeddings to a single vector of size hidden_size
         # Create a dropout layer with dropout_prob
         # Initialize a linear layer that maps the hidden vector to the number of output classes
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        pass
+        print(f"num_embeddings: {num_embeddings}, embed_size: {embed_size}")
+        self.embedding = nn.Embedding(num_embeddings=num_embeddings, embedding_dim=embed_size).to(device)
+
+         # Obtain embedding vectors for your input
+         #            - Output size: [batch_size, n_features * embed_size]
+        self.linear_layer = nn.Linear(embed_size*n_features, hidden_size).to(device)
+
+        self.dropout_layer = (nn.Dropout(dropout_prob)).to(device)
+        self.relu = nn.ReLU()
+        self.output_layer = nn.Linear(hidden_size, n_classes).to(device)
+
+        # pass
 
     def forward(self, x):
         '''
@@ -1687,13 +1708,60 @@ class Model(nn.Module):
         '''
 
         ### TODO ###
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        x = x.to(device)
+        # Shape of x: torch.Size([1, 32]) == [batch_size, n_features]
+        # print('Content of x:', x)
+        batch_size, n_features = x.shape
+        # print('Shape of x input features, [batch_size, n_features]:', x.shape, '\n')
+        # print('Type of x:', x.dtype, '\n')
 
-        return None
+        x_int64 = x.type(torch.int64)
+        # print('Content of embedding:', x_int64)
+        # print('Shape of embedding:', x_int64.shape, '\n')
+        # print('Type of embedding:', x_int64.dtype, '\n')
+
+
+        # word_embedding = (self.embedding(x)).to(device)
+        # print('Content of embedding:', x_int64)
+        # print('Shape of embedding:', x_int64.shape, '\n')
+        # print('Type of embedding:', x_int64.dtype, '\n')
+
+
+        ####################################################################
+        # Obtain word embedding
+        #  Obtain embedding vectors for your input
+        #             - Output size: [batch_size, n_features * embed_size]
+        word_embedding = (self.embedding(x_int64)).to(device) #[1, 32, 8]
+        word_embedding_squeezed = word_embedding.squeeze(0)
+        embed_size = word_embedding_squeezed.shape[-1]
+
+
+
+        # print('Content of word_embedding:', word_embedding)
+        # print('Shape of word_embedding:', word_embedding.shape, '\n')
+        # print('Type of word_embedding:', word_embedding.dtype, '\n')
+        # Shape of word_embedding: torch.Size([1, 32, 8])
+        # word_embedding_squeezed = word_embedding.squeeze(0)  #[32, 8] but should be [1, 32*8] = [1, 256] = [batch size, num of features*embed size]
+        word_embedding_reshaped = word_embedding.view(batch_size, n_features*embed_size)
+
+        relu = self.relu(self.linear_layer(word_embedding_reshaped))
+
+        dropout = self.dropout_layer(relu)
+
+        result_of_output_layer = self.output_layer(dropout)
+        # print('Content of result_of_output_layer:', result_of_output_layer)
+        # print('Shape of result_of_output_layer:', result_of_output_layer.shape, '\n')
+        # print('Type of result_of_output_layer:', result_of_output_layer.dtype, '\n')
+
+         # result_of_output_layer = logits: [batch_size, n_classes]
+
+        return result_of_output_layer
 
 
 # The code below runs a sanity check for your model class. The tests are similar to the hidden ones in Gradescope. However, note that passing the sanity check does <b>not</b> guarantee that you will pass the autograder; it is intended to help you debug.
 
-# In[ ]:
+# In[94]:
 
 
 ### DO NOT EDIT ###
@@ -1718,7 +1786,7 @@ if __name__ == '__main__':
 # 
 # Finally, you are ready to train your model. We provide you with all the code you need to train it, so you do <b>not</b> need to edit any code in this section.
 
-# In[ ]:
+# In[95]:
 
 
 ### DO NOT EDIT ###
@@ -1731,7 +1799,7 @@ import time
 
 # First, we read in the training dataset, create training examples, extract features, and instantiate the Pytorch `Dataset`.
 
-# In[ ]:
+# In[96]:
 
 
 ### DO NOT EDIT ###
@@ -1758,7 +1826,7 @@ if __name__== "__main__":
 
 # We will train the neural network using cross-entropy loss.
 
-# In[ ]:
+# In[97]:
 
 
 ### DO NOT EDIT ###
@@ -1787,7 +1855,7 @@ def train_model(model, vocab, train_data_loader, optimizer, n_epochs, device):
 
 # Next we instantiate the model and an <a href=https://jmlr.org/papers/volume12/duchi11a/duchi11a.pdf>Adagrad</a> optimizer. As with other homeworks, you are free to change the hyperparameters, though you should not need to.
 
-# In[ ]:
+# In[98]:
 
 
 ### DO NOT EDIT ###
@@ -1814,7 +1882,7 @@ if __name__ == "__main__":
 
 # Run the cell below to train the model.
 
-# In[ ]:
+# In[99]:
 
 
 ### DO NOT EDIT ###
@@ -1843,7 +1911,7 @@ if __name__=='__main__':
 # 
 # This function is worth <b>8 points</b>, and there is no partial credit.
 
-# In[ ]:
+# In[126]:
 
 
 def select_best_legal_action(parser_configs, predictions, n_labels):
@@ -1859,13 +1927,126 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
     preds = np.argmax(predictions, axis = 1) # Change this! This selects the highest probability action, regardless of legality.
 
     ### TODO ###
+    # print(f"parser_configs: {parser_configs}")
+    # print(f"parser_configs list len: {len(parser_configs)}")
+    parser_configs_len = len(parser_configs)
+
+    # parser_configs: [<__main__.ParserConfiguration object at 0x7f54dcb02520>, <__main__.ParserConfiguration object at 0x7f54dcc49400>, <__main__.ParserConfiguration object at 0x7f54dea25f70>, <__main__.ParserConfiguration object at 0x7f54dcc65d00>, <__main__.ParserConfiguration object at 0x7f54dccb0460>, <__main__.ParserConfiguration object at 0x7f54dc80b5e0>,
+
+    # print(f"predictions: {predictions}")
+    # print(f"predictions shape: {predictions.shape}")
+    # predictions shape: (1765, 95)    #1765 parser configs with 95 columns for each parser config
+    # 95 = 2 * n_labels + 1 = 2*47+1 = 94 +1 = 95
+    # n_labels: 47    # we have to predict the label?
+    # print(f"n_labels: {n_labels}\n")
+
+    bitmap_np_array = np.zeros((parser_configs_len, 2*n_labels + 1))
+
+    # parser_configs list len: 1765
+    # predictions: [[ -7.9638505   -4.9023805   -1.7691197  ...   5.3745494    0.02722144
+    #    13.007633  ]
+    #  [ -8.593049    -2.501113   -10.753521   ...  -2.5274448   -1.3838012
+    #    15.562916  ]
+    #  [ -7.4554424    0.36085862  -4.11383    ...   2.9703796    5.904849
+    #    12.831154  ]
+    #  ...
+    #  [ -9.084528     0.5178829   -6.563924   ...  -2.7183692    3.8894663
+    #    18.006874  ]
+    #  [ -7.640521    -6.610285    -8.546304   ...  -3.785166    -3.4325747
+    #    12.347177  ]
+    #  [ -6.3907423   -4.6567173   -8.828304   ...  -8.035017    -0.10355127
+    #    14.019371  ]]
+
+    # class ParserConfiguration(object):
+    #     def __init__(self, sentence, vocab):
+    #         '''
+    #         Inputs:
+    #             sentence: list of Word objects
+    #             vocab: Vocabulary object
+    #         '''
+    #
+    #         self.vocab = vocab
+    #
+    #         assert sentence[0].word_id == self.vocab.WORD_ROOT
+    #         self.stack = Stack([sentence[0]]) # Initialize stack with ROOT
+    #         self.buffer = Buffer(sentence[1:]) # Initialize buffer with sentence
+    #         self.dependencies = Dependencies(vocab)
+    #
+    #     def parse_step(self, transition):
+    #         '''
+    #         Update stack, buffer, and dependencies based on transition.
+    #         Inputs:
+    #             transition: str, "S", "LA-label", or "RA-label", where label is a valid label
+    #         '''
+    #         assert transition in self.vocab.tran2id
+    #
+    #         ### TODO ###
+    #
+    #         pass
+
+    # parser_configs: list of parser configurations of length N = 1765
+    for index, parser_config in enumerate(parser_configs):
+        parser_config_probs = predictions[index]
+        # print(f"probs of index {index} are: {parser_config_probs}")
+
+        stack = parser_config.stack
+        buffer = parser_config.buffer
+        dependencies = parser_config.dependencies
+
+         # the conditions related to LA, RA and S must be independent
+        if len(buffer) >= 1:
+            # print(f"buffer is a valid action for this parser config")
+            bitmap_np_array[index, 2*n_labels] = 1
+            bitmap_np_array[index, :2*n_labels] = 0
+
+        if len(stack) >= 2:
+            # print(f"RA-label is a valid action for this parser config")
+            bitmap_np_array[index, 0:n_labels] = 1
+            bitmap_np_array[index, n_labels:] = 0
+
+        if len(stack) >= 3:
+            # print(f"LA-label is a valid action for this parser config")
+            bitmap_np_array[index, 0:n_labels] = 0
+            bitmap_np_array[index, n_labels:2*n_labels] = 1
+            bitmap_np_array[index, 2*n_labels] = 0
+
+        # print(f"bitmap_np_array: {bitmap_np_array}")
+        # print(f"bitmap_np_array.shape: {bitmap_np_array.shape}")
+
+    valid_action_probs = predictions * bitmap_np_array
+    # print(f"valid_action_probs: {valid_action_probs}")
+    # print(f"valid_action_probs.shape: {valid_action_probs.shape}")
+
+    preds = np.argmax(valid_action_probs, axis = 1)
+
+
+
+
+        # if len
+        #     legal_action =
+
+        # The first n_labels indices [0,...,n_labels-1] correspond to the various LA-label actions
+        # The second n_labels indices [n_labels,...,2n_labels-1] correspond to the RA-label actions.
+        # The very last index 2n_labels corresponds to the S action.
+
+        # for each row of predictions, we need to find 1 best possible action among LA-label actions [0,...,n_labels-1] , RA-label actions and Shift action
+        # each parser config is the config after an action, every parser config corresponds to a row of preds probabilities. We just need to find the legal action.
+
+
+        # BITMAP
+        # Lets say for Row 1  , LA action is legal then all RA-labels and shift label t should be 0 in bitmap and we select the LA action label with max probability
+        # for each row of the array you will find one best action
+        # For LA-label if the action is legal, you will set your bit_map to bit_map[0:n_labels-1] = 1. Once you’re done with the entire array, then you can multiply the bit_map array to the individual prediction row in the  predictions array. Then select the max from the predictions array once you’re done masking the entire predictions array.
+        # RA (set  [n_labels:2*n_labels-1] )and S (set [2*n_labels])
+        # just multiply bitmap by the pred row and take the argmax of all predictions over axis=1
+
 
     return preds
 
 
 # Now we provide you with a function that takes a (trained) model and makes the best legal prediction for a batch of parser configurations. You do <b>not</b> need to edit this cell.
 
-# In[ ]:
+# In[127]:
 
 
 ### DO NOT EDIT ###
@@ -1894,7 +2075,7 @@ def predict(model, vocab, parser_configs):
 # 
 # You do <b>not</b> need to edit this cell.
 
-# In[ ]:
+# In[128]:
 
 
 ### DO NOT EDIT ###
@@ -1972,7 +2153,7 @@ def evaluate(model, vocab, dataset, eval_batch_size=5000):
 
 # Run the following cell to calculate your attachment scores. You must achieve a <b>labeled attachment score</b> of <b>≥ 80%</b> for full credit. Bear in mind that Gradescope uses a different (hidden) test set, so results may be slightly different.
 
-# In[ ]:
+# In[129]:
 
 
 ### DO NOT EDIT ###
@@ -1992,7 +2173,7 @@ if __name__=="__main__":
 # * ⍻: Edges for which you predicted the <b>correct head but incorrect label</b>
 # * ×: Edges that you do not have in your tree (i.e., you predicted the <b>incorrect head<b>).
 
-# In[ ]:
+# In[130]:
 
 
 ### DO NOT EDIT ###
@@ -2032,7 +2213,7 @@ def diagnose_sentences(idxes, data, preds, min_len, max_len, num_to_print=5):
         print('-'*100, '\n')
 
 
-# In[ ]:
+# In[131]:
 
 
 if __name__== '__main__':
@@ -2051,7 +2232,7 @@ if __name__== '__main__':
 # 1.   `hwk4.py`, the download of this notebook as a `.py` file (**not** a `.ipynb` file)
 # 1.   `model.pt`, the saved version of your `model`
 
-# In[ ]:
+# In[133]:
 
 
 ### DO NOT EDIT ###
@@ -2059,10 +2240,17 @@ if __name__== '__main__':
 import pickle
 
 if __name__=='__main__':
-    from google.colab import drive
-    drive.mount('/content/drive')
+    # from google.colab import drive
+    # drive.mount('/content/drive')
     print()
     print("Saving model....") 
-    torch.save(model, 'drive/My Drive/model.pt')
+    # torch.save(model, 'drive/My Drive/model.pt')
+    torch.save(model, './saved_models/model.pt')
     print("Saved!")
+
+
+# In[ ]:
+
+
+
 
