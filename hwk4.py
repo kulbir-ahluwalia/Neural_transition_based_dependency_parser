@@ -1550,7 +1550,7 @@ if __name__ == '__main__':
 
 # We provide you with a function `extract_features(parser_config)` that calls each of these functions and returns a list of the 48 total features. You do <b>not</b> need to edit this function.
 
-# In[89]:
+# In[37]:
 
 
 ### DO NOT EDIT ###
@@ -1608,7 +1608,7 @@ def extract_features(parser_config): # for both train & inference
 
 # Run the following cell as a sanity check for `generate_training_examples(..., feat_extract=extract_features)` (i.e., to make sure that you can generate training examples with the correct feature extraction function).
 
-# In[90]:
+# In[38]:
 
 
 if __name__ == '__main__':
@@ -1619,7 +1619,7 @@ if __name__ == '__main__':
 # 
 # Now we can go ahead and define our Pytorch `Dataset` class as well as our model.
 
-# In[91]:
+# In[39]:
 
 
 ### DO NOT EDIT ###
@@ -1633,7 +1633,7 @@ import torch.nn.functional as F
 # 
 # As in previous homeworks, we create a Pytorch `Dataset`, which we will use to feed our training data to the model. You do <b>not</b> need to edit this cell.
 
-# In[92]:
+# In[40]:
 
 
 ### DO NOT EDIT ###
@@ -1654,7 +1654,7 @@ class TrainDataset(torch.utils.data.Dataset):
 # 
 # Here you will write the `__init(...)__` and `forward(...)` methods of a feed-forward network, each of which is worth <b>8 points</b>. Your network should have an embedding layer, a single hidden layer, and an output layer. The `forward(...)` method will take in the features you have extracted from the parser configuration and predict the next parser action.
 
-# In[93]:
+# In[41]:
 
 
 class Model(nn.Module):
@@ -1761,7 +1761,7 @@ class Model(nn.Module):
 
 # The code below runs a sanity check for your model class. The tests are similar to the hidden ones in Gradescope. However, note that passing the sanity check does <b>not</b> guarantee that you will pass the autograder; it is intended to help you debug.
 
-# In[94]:
+# In[42]:
 
 
 ### DO NOT EDIT ###
@@ -1786,7 +1786,7 @@ if __name__ == '__main__':
 # 
 # Finally, you are ready to train your model. We provide you with all the code you need to train it, so you do <b>not</b> need to edit any code in this section.
 
-# In[95]:
+# In[43]:
 
 
 ### DO NOT EDIT ###
@@ -1799,7 +1799,7 @@ import time
 
 # First, we read in the training dataset, create training examples, extract features, and instantiate the Pytorch `Dataset`.
 
-# In[96]:
+# In[44]:
 
 
 ### DO NOT EDIT ###
@@ -1826,7 +1826,7 @@ if __name__== "__main__":
 
 # We will train the neural network using cross-entropy loss.
 
-# In[97]:
+# In[45]:
 
 
 ### DO NOT EDIT ###
@@ -1855,7 +1855,7 @@ def train_model(model, vocab, train_data_loader, optimizer, n_epochs, device):
 
 # Next we instantiate the model and an <a href=https://jmlr.org/papers/volume12/duchi11a/duchi11a.pdf>Adagrad</a> optimizer. As with other homeworks, you are free to change the hyperparameters, though you should not need to.
 
-# In[98]:
+# In[46]:
 
 
 ### DO NOT EDIT ###
@@ -1882,7 +1882,7 @@ if __name__ == "__main__":
 
 # Run the cell below to train the model.
 
-# In[99]:
+# In[47]:
 
 
 ### DO NOT EDIT ###
@@ -1911,7 +1911,7 @@ if __name__=='__main__':
 # 
 # This function is worth <b>8 points</b>, and there is no partial credit.
 
-# In[126]:
+# In[62]:
 
 
 def select_best_legal_action(parser_configs, predictions, n_labels):
@@ -2013,7 +2013,7 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
         # print(f"bitmap_np_array: {bitmap_np_array}")
         # print(f"bitmap_np_array.shape: {bitmap_np_array.shape}")
 
-    valid_action_probs = predictions * bitmap_np_array
+    valid_action_probs = predictions + (bitmap_np_array*100)
     # print(f"valid_action_probs: {valid_action_probs}")
     # print(f"valid_action_probs.shape: {valid_action_probs.shape}")
 
@@ -2046,7 +2046,7 @@ def select_best_legal_action(parser_configs, predictions, n_labels):
 
 # Now we provide you with a function that takes a (trained) model and makes the best legal prediction for a batch of parser configurations. You do <b>not</b> need to edit this cell.
 
-# In[127]:
+# In[63]:
 
 
 ### DO NOT EDIT ###
@@ -2075,7 +2075,7 @@ def predict(model, vocab, parser_configs):
 # 
 # You do <b>not</b> need to edit this cell.
 
-# In[128]:
+# In[64]:
 
 
 ### DO NOT EDIT ###
@@ -2153,7 +2153,7 @@ def evaluate(model, vocab, dataset, eval_batch_size=5000):
 
 # Run the following cell to calculate your attachment scores. You must achieve a <b>labeled attachment score</b> of <b>≥ 80%</b> for full credit. Bear in mind that Gradescope uses a different (hidden) test set, so results may be slightly different.
 
-# In[129]:
+# In[65]:
 
 
 ### DO NOT EDIT ###
@@ -2173,7 +2173,7 @@ if __name__=="__main__":
 # * ⍻: Edges for which you predicted the <b>correct head but incorrect label</b>
 # * ×: Edges that you do not have in your tree (i.e., you predicted the <b>incorrect head<b>).
 
-# In[130]:
+# In[66]:
 
 
 ### DO NOT EDIT ###
@@ -2213,7 +2213,7 @@ def diagnose_sentences(idxes, data, preds, min_len, max_len, num_to_print=5):
         print('-'*100, '\n')
 
 
-# In[131]:
+# In[67]:
 
 
 if __name__== '__main__':
@@ -2232,7 +2232,7 @@ if __name__== '__main__':
 # 1.   `hwk4.py`, the download of this notebook as a `.py` file (**not** a `.ipynb` file)
 # 1.   `model.pt`, the saved version of your `model`
 
-# In[133]:
+# In[68]:
 
 
 ### DO NOT EDIT ###
@@ -2249,7 +2249,13 @@ if __name__=='__main__':
     print("Saved!")
 
 
-# In[ ]:
+# In[68]:
+
+
+
+
+
+# In[61]:
 
 
 
